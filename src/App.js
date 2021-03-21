@@ -27,6 +27,8 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { Tooltip } from "@material-ui/core";
 import CustomAvatar from "./components/CustomAvatar";
+import Login from "./pages/Login";
+import UserProvider from "./providers/UserProvider";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -145,107 +147,112 @@ function App() {
     setOpen(false);
   };
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <div className={classes.root}>
-          <CssBaseline />
-          <AppBar elevation={0} position="fixed" className={classes.appBar}>
-            <Toolbar>
-              <div className={classes.logo}>
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  edge="start"
-                  className={clsx(classes.menuButton)}
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Typography variant="h6" noWrap>
-                  Keep
-                </Typography>
-              </div>
-              <div className={classes.input}>
-                <CustomInput />
-              </div>
-              <div className={classes.iconGroup}>
-                <Tooltip title="Refresh" arrow>
-                  <IconButton aria-label="refresh">
-                    <RefreshOutlinedIcon />
+    <UserProvider>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Switch>
+            <Route exact path="/login">
+              <Login />
+            </Route>
+            <div className={classes.root}>
+              <CssBaseline />
+              <AppBar elevation={0} position="fixed" className={classes.appBar}>
+                <Toolbar>
+                  <div className={classes.logo}>
+                    <IconButton
+                      color="inherit"
+                      aria-label="open drawer"
+                      onClick={handleDrawerOpen}
+                      edge="start"
+                      className={clsx(classes.menuButton)}
+                    >
+                      <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" noWrap>
+                      Keep
+                    </Typography>
+                  </div>
+                  <div className={classes.input}>
+                    <CustomInput />
+                  </div>
+                  <div className={classes.iconGroup}>
+                    <Tooltip title="Refresh" arrow>
+                      <IconButton aria-label="refresh">
+                        <RefreshOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="List View" arrow>
+                      <IconButton aria-label="list">
+                        <ViewAgendaOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Settings" arrow>
+                      <IconButton aria-label="settings">
+                        <SettingsOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                  <CustomAvatar />
+                </Toolbar>
+              </AppBar>
+              <Drawer
+                variant="permanent"
+                elevation={16}
+                onMouseEnter={() => setOpen(true)}
+                onMouseLeave={() => setOpen(false)}
+                className={clsx(classes.drawer, {
+                  [classes.drawerOpen]: open,
+                  [classes.drawerClose]: !open,
+                })}
+                classes={{
+                  paper: clsx({
+                    [classes.drawerOpen]: open,
+                    [classes.drawerClose]: !open,
+                  }),
+                }}
+              >
+                <div className={classes.toolbar}>
+                  <IconButton onClick={handleDrawerClose}>
+                    {theme.direction === "rtl" ? (
+                      <ChevronRightIcon />
+                    ) : (
+                      <ChevronLeftIcon />
+                    )}
                   </IconButton>
-                </Tooltip>
-                <Tooltip title="List View" arrow>
-                  <IconButton aria-label="list">
-                    <ViewAgendaOutlinedIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Settings" arrow>
-                  <IconButton aria-label="settings">
-                    <SettingsOutlinedIcon />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              <CustomAvatar />
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            variant="permanent"
-            elevation={16}
-            onMouseEnter={() => setOpen(true)}
-            onMouseLeave={() => setOpen(false)}
-            className={clsx(classes.drawer, {
-              [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open,
-            })}
-            classes={{
-              paper: clsx({
-                [classes.drawerOpen]: open,
-                [classes.drawerClose]: !open,
-              }),
-            }}
-          >
-            <div className={classes.toolbar}>
-              <IconButton onClick={handleDrawerClose}>
-                {theme.direction === "rtl" ? (
-                  <ChevronRightIcon />
-                ) : (
-                  <ChevronLeftIcon />
-                )}
-              </IconButton>
+                </div>
+                <Divider />
+                <List>
+                  {routes.map((item, index) => (
+                    <ListItemLink
+                      key={index}
+                      icon={item.icon}
+                      primary={item.text}
+                      to={item.to}
+                      open={open}
+                    />
+                  ))}
+                </List>
+              </Drawer>
+              <main className={classes.content}>
+                <div className={classes.toolbar} />
+                <Route exact path="/">
+                  <Home />
+                </Route>
+                <Route exact path="/reminders">
+                  <Reminders />
+                </Route>
+                <Route exact path="/archive">
+                  <Archive />
+                </Route>
+                <Route exact path="/trash">
+                  <Trash />
+                </Route>
+              </main>
             </div>
-            <Divider />
-            <List>
-              {routes.map((item, index) => (
-                <ListItemLink
-                  key={index}
-                  icon={item.icon}
-                  primary={item.text}
-                  to={item.to}
-                  open={open}
-                />
-              ))}
-            </List>
-          </Drawer>
-          <main className={classes.content}>
-            <div className={classes.toolbar} />
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route exact path="/reminders">
-                <Reminders />
-              </Route>
-              <Route exact path="/archive">
-                <Archive />
-              </Route>
-              <Route exact path="/trash">
-                <Trash />
-              </Route>
-            </Switch>
-          </main>
-        </div>
-      </Router>
-    </ThemeProvider>
+          </Switch>
+        </Router>
+      </ThemeProvider>
+    </UserProvider>
   );
 }
 

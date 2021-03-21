@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Popper from "@material-ui/core/Popper";
 import Fade from "@material-ui/core/Fade";
 import { Avatar } from "@material-ui/core";
-
+import { logOut } from "../firebase";
 const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(3, 2, 2, 2),
@@ -42,7 +42,9 @@ export default function CustomAvatar() {
       <Popper id={id} open={open} anchorEl={anchorEl} transition>
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            <div className={classes.paper}>The content of the Popper.</div>
+            <div className={classes.paper}>
+              <button onClick={logOut}>Logout</button>
+            </div>
           </Fade>
         )}
       </Popper>

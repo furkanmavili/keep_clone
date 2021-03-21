@@ -12,6 +12,7 @@ const data = [
     remindTime: "",
     image: "",
     labels: [],
+    edited: "",
   },
   {
     id: 2,
@@ -25,6 +26,7 @@ const data = [
     remindTime: "",
     image: "http://unsplash.it/400?random&gravity=center",
     labels: [],
+    edited: "",
   },
   {
     id: 3,
@@ -39,6 +41,7 @@ const data = [
     remindTime: "",
     image: "http://unsplash.it/401?random&gravity=center",
     labels: [],
+    edited: "",
   },
   {
     id: 4,
@@ -52,6 +55,7 @@ const data = [
     remindTime: "",
     image: "",
     labels: [],
+    edited: "",
   },
   {
     id: 5,
@@ -66,6 +70,7 @@ const data = [
     remindTime: "",
     image: "http://unsplash.it/402?random&gravity=center",
     labels: [],
+    edited: "",
   },
   {
     id: 6,
@@ -80,6 +85,7 @@ const data = [
     remindTime: "",
     image: "",
     labels: [],
+    edited: "",
   },
   {
     id: 7,
@@ -93,6 +99,7 @@ const data = [
     remindTime: "",
     image: "http://unsplash.it/403?random&gravity=center",
     labels: [],
+    edited: "",
   },
   {
     id: 8,
@@ -107,6 +114,7 @@ const data = [
     remindTime: "",
     image: "",
     labels: [],
+    edited: "",
   },
   {
     id: 9,
@@ -120,6 +128,7 @@ const data = [
     remindTime: "",
     image: "http://unsplash.it/404?random&gravity=center",
     labels: [],
+    edited: "",
   },
   {
     id: 10,
@@ -134,6 +143,7 @@ const data = [
     remindTime: "",
     image: "",
     labels: [],
+    edited: "",
   },
 ];
 
