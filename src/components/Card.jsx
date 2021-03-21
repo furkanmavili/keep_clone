@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -157,14 +157,17 @@ function CardBottom({ handleCurrentColor }) {
 export default function CustomCard({ title, content, color, image }) {
   const classes = useStyles();
   const [showBottom, setShowBottom] = useState(false);
-  const [currentColor, setCurrentColor] = useState(color);
+  const [currentColor, setCurrentColor] = useState("");
   const handleCurrentColor = (c) => {
     setCurrentColor(c);
   };
+  useEffect(() => {
+    setCurrentColor(color);
+  }, [color]);
   return (
     <Card
       className={classes.root}
-      style={{ backgroundColor: color ? currentColor : "inherit" }}
+      style={{ backgroundColor: currentColor ? currentColor : "inherit" }}
       onMouseEnter={() => setShowBottom(true)}
       onMouseLeave={() => setShowBottom(false)}
     >

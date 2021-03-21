@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomAvatar() {
+export default function CustomAvatar({ photoURL }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -37,7 +37,7 @@ export default function CustomAvatar() {
         type="button"
         onClick={handleClick}
       >
-        <Avatar>H</Avatar>
+        <Avatar src={photoURL}>H</Avatar>
       </button>
       <Popper id={id} open={open} anchorEl={anchorEl} transition>
         {({ TransitionProps }) => (

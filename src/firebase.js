@@ -12,11 +12,13 @@ var firebaseConfig = {
   measurementId: "G-2W563GCDZY",
 };
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+} else {
+  firebase.app();
+}
 
 export const auth = firebase.auth();
-export const firestore = firebase.firestore();
-
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 export const signInWithGoogle = () => {
   auth
@@ -37,4 +39,22 @@ export const logOut = () => {
     .catch((error) => {
       console.log(error.message);
     });
+};
+
+const db = firebase.firestore();
+export const getNotes = (user) => {
+  if (!user) return;
+  return db.collection("notes").where("owner", "==", user.uid);
+};
+
+export const addNote = async (title, content, color, user) => {
+  const data = {
+    title,
+    content,
+    color,
+    owner: user,
+  };
+
+  const res = await db.collection("notes").add(data);
+  return res;
 };

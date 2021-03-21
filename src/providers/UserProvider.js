@@ -6,10 +6,12 @@ const UserProvider = ({ children }) => {
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        const { displayName, email } = user;
+        const { displayName, email, photoURL, uid } = user;
         setuser({
           displayName,
           email,
+          photoURL,
+          uid,
         });
         return;
       }
