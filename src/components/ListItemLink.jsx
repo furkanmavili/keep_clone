@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listItemClose: {
     borderRadius: "53%",
+    transition: "all .3s ease",
   },
 }));
 function ListItemLink(props) {
