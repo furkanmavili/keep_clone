@@ -104,6 +104,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
+
     overflowX: "hidden",
     width: theme.spacing(7),
     [theme.breakpoints.up("sm")]: {
@@ -134,7 +135,6 @@ function Home() {
   const theme = useTheme();
   const ref = getNotes(user);
   const [notes, setNotes] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!ref) return;
@@ -145,6 +145,7 @@ function Home() {
       });
       setNotes(items);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDrawerOpen = () => {
@@ -251,10 +252,7 @@ function Home() {
                   <Card
                     style={{ marginBottom: "20px" }}
                     key={index}
-                    title={item.title}
-                    content={item.content}
-                    color={item.color}
-                    image={item.image}
+                    item={item}
                   />
                 );
               })}
