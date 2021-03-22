@@ -1,22 +1,9 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useState } from "react";
-import {
-  Button,
-  ClickAwayListener,
-  IconButton,
-  InputBase,
-  Popper,
-  Tooltip,
-} from "@material-ui/core";
+import { Button, ClickAwayListener, InputBase } from "@material-ui/core";
 import { addNote } from "../firebase";
-import {
-  AddAlertOutlined,
-  ArchiveOutlined,
-  ImageOutlined,
-  MoreVertOutlined,
-  PaletteOutlined,
-} from "@material-ui/icons";
+import CardBottom from "./CardBottom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,12 +69,12 @@ function AddNote({ user }) {
     if (title || content) {
       const result = addNote(title, content, currentColor, user.uid);
       if (result) {
-        setIsNamedFocused(false);
         setTitle("");
         setContent("");
-        setCurrentColor("");
       }
     }
+    setIsNamedFocused(false);
+    setCurrentColor("");
   };
   return (
     <div className={classes.flex}>
@@ -95,7 +82,6 @@ function AddNote({ user }) {
         <div
           style={{ backgroundColor: currentColor ? currentColor : "inherit" }}
           className={classes.root}
-          onClick={() => setIsNamedFocused(true)}
         >
           {!isNameFocused ? (
             <Typography
@@ -120,111 +106,21 @@ function AddNote({ user }) {
             multiline
             placeholder="Take a note.."
             style={{ display: "block" }}
+            onClick={() => setIsNamedFocused(true)}
             onChange={(e) => setContent(e.target.value)}
           />
           {isNameFocused && (
-            <CardBottom handleCurrentColor={handleCurrentColor} />
+            <CardBottom
+              handleCurrentColor={handleCurrentColor}
+              closeButton={
+                <Button variant="text" onClick={handleSubmit} color="default">
+                  Cancel
+                </Button>
+              }
+            />
           )}
         </div>
       </ClickAwayListener>
-    </div>
-  );
-}
-
-const colors = [
-  "#442f19",
-  "#5b2245",
-  "#42275e",
-  "#1e3a5f",
-  "#16504b",
-  "#345920",
-  "#202124",
-  "#614a19",
-  "#635d19",
-  "#5c2b29",
-  "#3c3f43",
-  "#2d555e",
-];
-function CardBottom({ handleCurrentColor }) {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.bottomMenu}>
-      <CardBottomButton
-        icon={<AddAlertOutlined />}
-        popper={<h2>hello</h2>}
-        label="color-popper"
-        handleCurrentColor={handleCurrentColor}
-        placement="bottom-start"
-        title="Remind me"
-      />
-
-      <CardBottomButton
-        icon={<PaletteOutlined />}
-        popper={<ColorPalette handleCurrentColor={handleCurrentColor} />}
-        label="color-popper"
-        handleCurrentColor={handleCurrentColor}
-        placement="top-start"
-        title="Color"
-      />
-      <Tooltip title="Add Image">
-        <IconButton className={classes.smallIcon} aria-label="Add Image">
-          <ImageOutlined />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Archive">
-        <IconButton className={classes.smallIcon} aria-label="Archive">
-          <ArchiveOutlined />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="More">
-        <IconButton className={classes.smallIcon} aria-label="More">
-          <MoreVertOutlined />
-        </IconButton>
-      </Tooltip>
-      <Button>Create Note</Button>
-    </div>
-  );
-}
-function CardBottomButton({ label, placement, popper, icon, title }) {
-  const classes = useStyles();
-  const [anchorEl, setanchorEl] = useState(null);
-  const handleColor = (event) => {
-    setanchorEl(anchorEl ? null : event.currentTarget);
-  };
-  const open = Boolean(anchorEl);
-  const id = open ? label : undefined;
-  return (
-    <>
-      <Tooltip title={title}>
-        <IconButton
-          aria-describedby={id}
-          onClick={handleColor}
-          className={classes.smallIcon}
-          aria-label="Color"
-        >
-          {icon}
-        </IconButton>
-      </Tooltip>
-      <Popper id={id} open={open} anchorEl={anchorEl} placement={placement}>
-        <div className={classes.paper}>{popper}</div>
-      </Popper>
-    </>
-  );
-}
-
-function ColorPalette({ handleCurrentColor }) {
-  const classes = useStyles();
-  return (
-    <div className={classes.circleWrapper}>
-      {colors.map((item, index) => (
-        <div
-          key={index}
-          onClick={() => handleCurrentColor(item)}
-          className={classes.circle}
-          style={{ backgroundColor: item }}
-        ></div>
-      ))}
     </div>
   );
 }
