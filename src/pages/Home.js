@@ -1,7 +1,5 @@
 import { makeStyles, useTheme } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
-import Card from "../components/Card";
-import MasonryGrid from "../components/MasonryGrid";
 import { UserContext } from "../providers/UserProvider";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import Reminders from "./Reminders";
@@ -27,8 +25,9 @@ import ListItemLink from "../components/ListItemLink";
 import { Tooltip } from "@material-ui/core";
 import CustomAvatar from "../components/CustomAvatar";
 import routes from "../routes";
-import { getNotes } from "../firebase";
 import AddNote from "../components/AddNote";
+import CardList from "../components/CardList";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -133,20 +132,6 @@ function Home() {
   const history = useHistory();
   const [open, setOpen] = useState(false);
   const theme = useTheme();
-  const ref = getNotes(user);
-  const [notes, setNotes] = useState([]);
-
-  useEffect(() => {
-    if (!ref) return;
-    ref.onSnapshot((querySnapshot) => {
-      const items = [];
-      querySnapshot.forEach((doc) => {
-        items.push(doc.data());
-      });
-      setNotes(items);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(!open);
@@ -246,17 +231,7 @@ function Home() {
         <Switch>
           <Route exact path={path}>
             <AddNote user={user} />
-            <MasonryGrid>
-              {notes.map((item, index) => {
-                return (
-                  <Card
-                    style={{ marginBottom: "20px" }}
-                    key={index}
-                    item={item}
-                  />
-                );
-              })}
-            </MasonryGrid>
+            <CardList />
           </Route>
           <Route path={`${path}reminders`}>
             <Reminders />
