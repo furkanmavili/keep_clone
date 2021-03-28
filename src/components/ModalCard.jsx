@@ -6,7 +6,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { InputBase, makeStyles } from "@material-ui/core";
 import CardBottom from "./CardBottom";
+import { updateNote } from "../firebase";
 import { UserContext } from "../providers/UserProvider";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     border: "1px solid #5f6368",
@@ -59,13 +61,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ModalCard({ open, setOpen, item, currentColor }) {
-  const { title, content, color, image } = item;
+  const { title, content, photoURL } = item;
   const classes = useStyles();
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newColor, setNewColor] = useState("");
-
-  console.log(newContent, newContent.split("\n").length);
+  const user = useContext(UserContext);
   useEffect(() => {
     setNewTitle(title);
     setNewContent(content);
@@ -73,15 +74,22 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
   }, [title, content, currentColor]);
 
   const handleClose = () => {
-    setOpen(false);
-  };
-  const handleSubmit = () => {
-    if (title !== newTitle || content !== newContent) {
-      // const result = addNote(title, content, currentColor, user.uid);
-      console.log("submitting...", newTitle, newContent);
+    console.log("iam working..");
+    if (
+      title !== newTitle ||
+      content !== newContent ||
+      currentColor !== newColor
+    ) {
+      updateNote(item["docID"], {
+        title: newTitle,
+        content: newContent,
+        color: newColor,
+        owner: user.uid,
+      });
     }
     setOpen(false);
   };
+  const handleSubmit = () => {};
   return (
     <div>
       <Dialog
@@ -96,6 +104,7 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
         }}
         scroll="paper"
       >
+        {photoURL && <img src={photoURL} alt={title} />}
         <DialogTitle id="form-dialog-title">
           <InputBase
             autoFocus
@@ -132,6 +141,7 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
               </Button>
             }
             handleCurrentColor={(c) => setNewColor(c)}
+            item={item}
           />
         </DialogActions>
       </Dialog>
