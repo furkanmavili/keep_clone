@@ -56,61 +56,76 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AddNote({ user }) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [currentColor, setCurrentColor] = useState("");
+  const [state, setState] = useState({
+    title: "",
+    content: "",
+    color: "",
+    isArchived: false,
+    isPinned: false,
+    isTrash: false,
+    remindTime: "",
+    photoURL: "",
+    labels: [],
+    edited: "",
+  });
   const [isNameFocused, setIsNamedFocused] = useState(false);
   const classes = useStyles();
 
+  const handleState = (key, value) => {
+    setState((prevState) => ({ ...prevState, [key]: value }));
+  };
   const handleCurrentColor = (c) => {
-    setCurrentColor(c);
+    handleState("color", c);
   };
   const handleSubmit = () => {
-    if (title || content) {
-      const result = addNote(title, content, currentColor, user.uid);
+    if (state.title || state.content) {
+      const result = addNote(state.title, state.content, state.color, user.uid);
       if (result) {
-        setTitle("");
-        setContent("");
+        handleState("title", "");
+        handleState("content", "");
       }
     }
     setIsNamedFocused(false);
-    setCurrentColor("");
+    handleCurrentColor("");
   };
   return (
     <div className={classes.flex}>
       <ClickAwayListener onClickAway={handleSubmit}>
         <div
-          style={{ backgroundColor: currentColor ? currentColor : "inherit" }}
+          style={{ backgroundColor: state.color ? state.color : "inherit" }}
           className={classes.root}
         >
+          {state.photoURL && <img src={state.photoURL} alt="note" />}
+
           {!isNameFocused ? (
             <Typography
               onClick={() => {
                 setIsNamedFocused(true);
               }}
             >
-              {content}
+              {state.content}
             </Typography>
           ) : (
             <InputBase
               className={classes.margin}
               placeholder="Title"
               inputProps={{ "aria-label": "naked" }}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              value={state.title}
+              onChange={(e) => handleState("title", e.target.value)}
             />
           )}
           <InputBase
             autoFocus
-            value={content}
+            value={state.content}
             multiline
             placeholder="Take a note.."
             style={{ display: "block" }}
             onClick={() => setIsNamedFocused(true)}
-            onChange={(e) => setContent(e.target.value)}
+            onChange={(e) => handleState("content", e.target.value)}
           />
           {isNameFocused && (
             <CardBottom
+              isNew={true}
               handleCurrentColor={handleCurrentColor}
               closeButton={
                 <Button variant="text" onClick={handleSubmit} color="default">
