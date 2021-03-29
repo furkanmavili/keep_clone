@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 const UploadPhoto = forwardRef((props, ref) => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
-  // const { url, progress } = useStorage(file, props.docID);
+  const { url, progress } = useStorage(file, props.docID);
   const classes = useStyles();
 
   const handleChange = (e) => {
@@ -32,7 +32,6 @@ const UploadPhoto = forwardRef((props, ref) => {
       setError("Please select and image file (png or jpeg) ");
     }
   };
-  console.log(file,error)
   return (
     <div>
       <input

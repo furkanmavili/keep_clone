@@ -4,10 +4,11 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { InputBase, makeStyles } from "@material-ui/core";
+import { IconButton, InputBase, makeStyles } from "@material-ui/core";
 import CardBottom from "./CardBottom";
 import { updateNote } from "../firebase";
 import { UserContext } from "../providers/UserProvider";
+import { DeleteOutline } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,6 +59,14 @@ const useStyles = makeStyles((theme) => ({
   titleInput: {
     fontSize: 20,
   },
+  imageWrapper: {
+    position: "relative",
+  },
+  imageButton: {
+    position: "absolute",
+    right: 10,
+    bottom: 10,
+  },
 }));
 
 export default function ModalCard({ open, setOpen, item, currentColor }) {
@@ -66,6 +75,7 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newColor, setNewColor] = useState("");
+  const [showImageButton, setShowImageButton] = useState(false);
   const user = useContext(UserContext);
   useEffect(() => {
     setNewTitle(title);
@@ -73,6 +83,11 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
     setNewColor(currentColor);
   }, [title, content, currentColor]);
 
+  const handleImageButton = () => {
+    updateNote(item["docID"], {
+      photoURL: "",
+    });
+  };
   const handleClose = () => {
     console.log("iam working..");
     if (
@@ -104,7 +119,24 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
         }}
         scroll="paper"
       >
-        {photoURL && <img src={photoURL} alt={title} />}
+        {photoURL && (
+          <div
+            className={classes.imageWrapper}
+            onMouseEnter={() => setShowImageButton(true)}
+            onMouseLeave={() => setShowImageButton(false)}
+          >
+            <img style={{ width: "100%" }} src={photoURL} alt={title} />
+            {showImageButton && (
+              <IconButton
+                onClick={handleImageButton}
+                size="small"
+                className={classes.imageButton}
+              >
+                <DeleteOutline />
+              </IconButton>
+            )}
+          </div>
+        )}
         <DialogTitle id="form-dialog-title">
           <InputBase
             autoFocus
