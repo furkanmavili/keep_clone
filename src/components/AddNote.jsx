@@ -79,7 +79,13 @@ function AddNote({ user }) {
   };
   const handleSubmit = () => {
     if (state.title || state.content) {
-      const result = addNote(state.title, state.content, state.color, user.uid);
+      const result = addNote(
+        state.title,
+        state.content,
+        state.color,
+        user.uid,
+        ""
+      );
       if (result) {
         handleState("title", "");
         handleState("content", "");
