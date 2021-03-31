@@ -68,6 +68,7 @@ export const addNote = async (title, content, color, user, photoURL) => {
     title,
     content,
     color,
+    edited: firebase.firestore.FieldValue.serverTimestamp(),
     owner: user,
     photoURL,
   };
@@ -78,7 +79,10 @@ export const addNote = async (title, content, color, user, photoURL) => {
 // Updating note
 export const updateNote = async (docID, data) => {
   const doc = ref.doc(docID);
-  const res = await doc.update(data);
+  const res = await doc.update({
+    ...data,
+    edited: firebase.firestore.FieldValue.serverTimestamp(),
+  });
   return res;
 };
 

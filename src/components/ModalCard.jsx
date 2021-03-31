@@ -67,16 +67,28 @@ const useStyles = makeStyles((theme) => ({
     right: 10,
     bottom: 10,
   },
+  edited: { color: "#9aa0a6", textAlign: "right", fontSize: "12px" },
 }));
 
+function calculateEdited(date) {
+  const dif = new Date().getTime() - date.getTime();
+  const dayDif = dif / (1000 * 3600 * 24);
+  if (dayDif > 1) {
+    return (
+      date.toLocaleString("en-En", { month: "long" }) + " " + date.getDate()
+    );
+  }
+  return date.getHours() + ":" + date.getMinutes();
+}
 export default function ModalCard({ open, setOpen, item, currentColor }) {
-  const { title, content, photoURL } = item;
+  const { title, content, photoURL, edited } = item;
   const classes = useStyles();
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newColor, setNewColor] = useState("");
   const [showImageButton, setShowImageButton] = useState(false);
   const user = useContext(UserContext);
+
   useEffect(() => {
     setNewTitle(title);
     setNewContent(content);
@@ -89,7 +101,6 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
     });
   };
   const handleClose = () => {
-    console.log("iam working..");
     if (
       title !== newTitle ||
       content !== newContent ||
@@ -102,9 +113,9 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
         owner: user.uid,
       });
     }
+
     setOpen(false);
   };
-  const handleSubmit = () => {};
   return (
     <div>
       <Dialog
@@ -164,15 +175,22 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
           />
+          {edited && (
+            <div className={classes.edited}>
+              Edited {calculateEdited(new Date(edited["seconds"] * 1000))}
+            </div>
+          )}
         </DialogContent>
         <DialogActions>
           <CardBottom
             closeButton={
-              <Button variant="text" onClick={handleSubmit} color="default">
+              <Button variant="text" onClick={handleClose} color="default">
                 Cancel
               </Button>
             }
-            handleCurrentColor={(c) => setNewColor(c)}
+            handleCurrentColor={(c) =>
+              setNewColor(new Date(edited["seconds"] * 1000))
+            }
             item={item}
           />
         </DialogActions>
