@@ -88,7 +88,7 @@ function CardBottomButton({ label, placement, popper, icon, title }) {
   );
 }
 
-export default function CardBottom({ handleCurrentColor, item }) {
+export default function CardBottom({ handleCurrentColor, item, closeButton }) {
   const classes = useStyles();
 
   return (
@@ -130,6 +130,7 @@ export default function CardBottom({ handleCurrentColor, item }) {
         placement="bottom-start"
         title="More"
       />
+      {closeButton}
     </div>
   );
 }
