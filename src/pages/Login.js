@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0 20px",
   },
   page: {
-    backgroundColor: "#202124",
+    backgroundColor: theme.palette.background.default,
     height: "100vh",
     display: "flex",
     alignItems: "center",
@@ -37,7 +37,7 @@ export default function Login() {
   const classes = useStyles();
   useEffect(() => {
     if (user) {
-      history.push("/");
+      history.push("/home");
     }
   }, [user, history]);
 

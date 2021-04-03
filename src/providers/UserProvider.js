@@ -15,7 +15,7 @@ const UserProvider = ({ children }) => {
         });
         return;
       }
-      setuser(null);
+      setuser(false);
     });
   }, []);
   return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
