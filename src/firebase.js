@@ -24,6 +24,7 @@ export const storage = firebase.storage();
 // Authentication
 export const auth = firebase.auth();
 const googleProvider = new firebase.auth.GoogleAuthProvider();
+
 export const signInWithGoogle = () => {
   auth
     .signInWithPopup(googleProvider)
@@ -63,22 +64,25 @@ const defaultNote = {
   photoURL: "",
 };
 // Adding new note
-export const addNote = async (title, content, color, user, photoURL) => {
-  const data = {
-    title,
-    content,
-    color,
-    edited: firebase.firestore.FieldValue.serverTimestamp(),
-    owner: user,
-    photoURL,
-  };
-  const res = await ref.add({ ...defaultNote, ...data });
+export const addNote = async (data) => {
+  console.log("adding new note...", {
+    ...defaultNote,
+    ...data,
+  });
+  const res = await ref.add({
+    ...defaultNote,
+    ...data,
+  });
   return res;
 };
 
 // Updating note
 export const updateNote = async (docID, data) => {
   const doc = ref.doc(docID);
+  console.log(`Updating with id:${doc}, `, {
+    ...data,
+    edited: firebase.firestore.FieldValue.serverTimestamp(),
+  });
   const res = await doc.update({
     ...data,
     edited: firebase.firestore.FieldValue.serverTimestamp(),
@@ -89,6 +93,7 @@ export const updateNote = async (docID, data) => {
 // Deleting note
 export const deleteNote = async (docID) => {
   const doc = ref.doc(docID);
+  console.log("Deleting note with id:", doc);
   doc
     .delete()
     .then(() => {
