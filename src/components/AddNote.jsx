@@ -1,13 +1,13 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Button, ClickAwayListener, InputBase } from "@material-ui/core";
 import { addNote } from "../firebase";
 import CardBottom from "./CardBottom";
+import { UserContext } from "../providers/UserProvider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    border: "1px solid #5f6368",
     width: "100%",
     maxWidth: 600,
     borderRadius: theme.shape.borderRadius,
@@ -33,8 +33,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: theme.spacing(1),
-    backgroundColor: "#202124",
-    borderRadius: theme.shape.borderRadius,
   },
   circleWrapper: {
     display: "flex",
@@ -42,11 +40,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     maxWidth: 120,
     gap: 2,
-  },
-  circle: {
-    cursor: "pointer",
-    width: 25,
-    height: 25,
     borderRadius: "50%",
     transition: "all 500ms ease",
     "&:hover": {
@@ -55,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AddNote({ user }) {
+function AddNote() {
   const [state, setState] = useState({
     title: "",
     content: "",
@@ -68,6 +61,7 @@ function AddNote({ user }) {
     labels: [],
     edited: "",
   });
+  const user = useContext(UserContext);
   const [isNameFocused, setIsNamedFocused] = useState(false);
   const classes = useStyles();
 
@@ -79,13 +73,12 @@ function AddNote({ user }) {
   };
   const handleSubmit = () => {
     if (state.title || state.content) {
-      const result = addNote(
-        state.title,
-        state.content,
-        state.color,
-        user.uid,
-        ""
-      );
+      const result = addNote({
+        title: state.title,
+        content: state.content,
+        color: state.color,
+        owner: user.uid,
+      });
       if (result) {
         handleState("title", "");
         handleState("content", "");
@@ -98,7 +91,10 @@ function AddNote({ user }) {
     <div className={classes.flex}>
       <ClickAwayListener onClickAway={handleSubmit}>
         <div
-          style={{ backgroundColor: state.color ? state.color : "inherit" }}
+          style={{
+            backgroundColor: state.color ? state.color : "inherit",
+            border: state.color ? "none" : "1px solid #5f6368",
+          }}
           className={classes.root}
         >
           {state.photoURL && <img src={state.photoURL} alt="note" />}

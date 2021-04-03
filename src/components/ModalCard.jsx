@@ -4,7 +4,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { IconButton, InputBase, makeStyles } from "@material-ui/core";
+import { IconButton, InputBase, makeStyles, useTheme } from "@material-ui/core";
 import CardBottom from "./CardBottom";
 import { updateNote } from "../firebase";
 import { UserContext } from "../providers/UserProvider";
@@ -36,8 +36,6 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: theme.spacing(1),
-    backgroundColor: "#202124",
-    borderRadius: theme.shape.borderRadius,
   },
   circleWrapper: {
     display: "flex",
@@ -83,6 +81,7 @@ function calculateEdited(date) {
 export default function ModalCard({ open, setOpen, item, currentColor }) {
   const { title, content, photoURL, edited } = item;
   const classes = useStyles();
+  const theme = useTheme();
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newColor, setNewColor] = useState("");
@@ -125,7 +124,11 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
         className={classes.backdrop}
         PaperProps={{
           className: classes.root,
-          style: { backgroundColor: newColor ? newColor : "#202124" },
+          style: {
+            backgroundColor: newColor
+              ? newColor
+              : theme.palette.background.paper,
+          },
           elevation: 5,
         }}
         scroll="paper"
@@ -185,7 +188,7 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
           <CardBottom
             closeButton={
               <Button variant="text" onClick={handleClose} color="default">
-                Cancel
+                Close
               </Button>
             }
             handleCurrentColor={(c) =>

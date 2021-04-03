@@ -24,16 +24,29 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     transition: "all .4s ease",
   },
+  icons: {
+    display: "flex",
+    flex: 1,
+    justifyContent: "space-between",
+    maxWidth: 300,
+    paddingLeft: theme.spacing(1),
+  },
   smallIcon: {
     zIndex: 10,
+    color: "#fff",
+    opacity: 0.7,
     "& svg": {
       fontSize: 18,
+    },
+    "&:hover": {
+      opacity: 0.87,
+      backgroundColor: "rgba(154,160,166,0.157)",
     },
   },
   paper: {
     padding: theme.spacing(1),
-    backgroundColor: "#202124",
     borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.background.paper,
   },
   circleWrapper: {
     display: "flex",
@@ -93,43 +106,46 @@ export default function CardBottom({ handleCurrentColor, item, closeButton }) {
 
   return (
     <div className={classes.bottomMenu}>
-      {/* Reminder for card */}
-      <CardBottomButton
-        icon={<AddAlertOutlinedIcon />}
-        popper={<h2>hello</h2>}
-        label="color-popper"
-        title="Remind me"
-      />
+      <div className={classes.icons}>
+        {/* Reminder for card */}
+        <CardBottomButton
+          icon={<AddAlertOutlinedIcon />}
+          popper={<h2>hello</h2>}
+          label="color-popper"
+          title="Remind me"
+        />
 
-      {/* Color picker for card */}
-      <CardBottomButton
-        icon={<PaletteOutlinedIcon />}
-        popper={<ColorPalette handleCurrentColor={handleCurrentColor} />}
-        label="color-popper"
-        placement="top-start"
-        title="Color"
-      />
+        {/* Color picker for card */}
+        <CardBottomButton
+          icon={<PaletteOutlinedIcon />}
+          popper={<ColorPalette handleCurrentColor={handleCurrentColor} />}
+          label="color-popper"
+          placement="top-start"
+          title="Color"
+        />
 
-      {/* Image upload */}
-      <Tooltip title="Add Image">
-        <UploadPhoto docID={item ? item["docID"] : ""} />
-      </Tooltip>
+        {/* Image upload */}
+        <Tooltip title="Add Image">
+          <UploadPhoto docID={item ? item["docID"] : ""} />
+        </Tooltip>
 
-      {/* Archive note */}
-      <Tooltip title="Archive">
-        <IconButton className={classes.smallIcon} aria-label="Archive">
-          <ArchiveOutlinedIcon />
-        </IconButton>
-      </Tooltip>
+        {/* Archive note */}
+        <Tooltip title="Archive">
+          <IconButton className={classes.smallIcon} aria-label="Archive">
+            <ArchiveOutlinedIcon />
+          </IconButton>
+        </Tooltip>
 
-      {/* More options */}
-      <CardBottomButton
-        icon={<MoreVertOutlinedIcon />}
-        popper={<MorePoppper item={item} />}
-        label="more-popper"
-        placement="bottom-start"
-        title="More"
-      />
+        {/* More options */}
+        <CardBottomButton
+          icon={<MoreVertOutlinedIcon />}
+          popper={<MorePoppper item={item} />}
+          label="more-popper"
+          placement="bottom-start"
+          title="More"
+        />
+      </div>
+
       {closeButton}
     </div>
   );
@@ -158,7 +174,7 @@ const MorePopperStyles = makeStyles((theme) => ({
   root: {
     boxShadow: "0 1px 2px 0 rgb(0 0 0 / 60%), 0 2px 6px 2px rgb(0 0 0 / 30%)",
     backgroundColor: "#202124",
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: 4,
   },
 }));
 

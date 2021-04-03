@@ -6,8 +6,14 @@ import useStorage from "../hooks/useStorage";
 const useStyles = makeStyles((theme) => ({
   smallIcon: {
     zIndex: 10,
+    color: "#fff",
+    opacity: 0.7,
     "& svg": {
       fontSize: 18,
+    },
+    "&:hover": {
+      opacity: 0.87,
+      backgroundColor: "rgba(154,160,166,0.157)",
     },
   },
   input: {

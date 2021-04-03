@@ -13,10 +13,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     marginBottom: theme.spacing(2),
     backgroundColor: "inherit",
-    border: "1px solid #5f6368",
+
     transition: "all .3s ease",
   },
-
   bottomMenu: {
     width: "100%",
     display: "flex",
@@ -28,11 +27,6 @@ const useStyles = makeStyles((theme) => ({
     "& svg": {
       fontSize: 18,
     },
-  },
-  paper: {
-    padding: theme.spacing(1),
-    backgroundColor: "#202124",
-    borderRadius: theme.shape.borderRadius,
   },
   circleWrapper: {
     display: "flex",
@@ -90,7 +84,10 @@ export default function CustomCard({ item }) {
       />
       <Card
         className={classes.root}
-        style={{ backgroundColor: color ? color : "inherit" }}
+        style={{
+          backgroundColor: color ? color : "inherit",
+          border: color ? "none" : "1px solid #5f6368",
+        }}
         onMouseEnter={() => setShowBottom(true)}
         onMouseLeave={() => setShowBottom(false)}
       >
