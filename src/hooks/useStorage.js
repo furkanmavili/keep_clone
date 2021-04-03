@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { addNote, storage, updateNote } from "../firebase";
 import { UserContext } from "../providers/UserProvider";
+
 const useStorage = (file, docID) => {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
@@ -24,7 +25,7 @@ const useStorage = (file, docID) => {
         if (docID) {
           updateNote(docID, { photoURL: url });
         } else {
-          addNote("", "", "", user.uid, url);
+          addNote({ owner: user.uid, photoURL: url });
         }
         setUrl(url);
       }
