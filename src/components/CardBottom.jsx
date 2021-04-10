@@ -3,9 +3,10 @@ import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
+import UnarchiveOutlinedIcon from "@material-ui/icons/UnarchiveOutlined";
 import { makeStyles } from "@material-ui/core/styles";
 import colors from "../constants/colors";
-import { deleteNote } from "../firebase";
+import { deleteNote, updateNote } from "../firebase";
 import UploadPhoto from "./UploadPhoto";
 import {
   IconButton,
@@ -68,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CardBottomButton({ label, placement, popper, icon, title }) {
+function ButtonWithPopper({ label, placement, popper, icon, title }) {
   const classes = useStyles();
   const [anchorEl, setanchorEl] = React.useState(null);
   const handleColor = (event) => {
@@ -104,11 +105,17 @@ function CardBottomButton({ label, placement, popper, icon, title }) {
 export default function CardBottom({ handleCurrentColor, item, closeButton }) {
   const classes = useStyles();
 
+  const handleArchive = () => {
+    updateNote(item["docID"], { isArchived: true });
+  };
+  const handleUnarchive = () => {
+    updateNote(item["docID"], { isArchived: false });
+  };
   return (
     <div className={classes.bottomMenu}>
       <div className={classes.icons}>
         {/* Reminder for card */}
-        <CardBottomButton
+        <ButtonWithPopper
           icon={<AddAlertOutlinedIcon />}
           popper={<h2>hello</h2>}
           label="color-popper"
@@ -116,7 +123,7 @@ export default function CardBottom({ handleCurrentColor, item, closeButton }) {
         />
 
         {/* Color picker for card */}
-        <CardBottomButton
+        <ButtonWithPopper
           icon={<PaletteOutlinedIcon />}
           popper={<ColorPalette handleCurrentColor={handleCurrentColor} />}
           label="color-popper"
@@ -130,14 +137,30 @@ export default function CardBottom({ handleCurrentColor, item, closeButton }) {
         </Tooltip>
 
         {/* Archive note */}
-        <Tooltip title="Archive">
-          <IconButton className={classes.smallIcon} aria-label="Archive">
-            <ArchiveOutlinedIcon />
-          </IconButton>
-        </Tooltip>
+        {item["isArchived"] ? (
+          <Tooltip title="Unarchive">
+            <IconButton
+              className={classes.smallIcon}
+              aria-label="Unarchive"
+              onClick={handleUnarchive}
+            >
+              <UnarchiveOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title="Archive">
+            <IconButton
+              className={classes.smallIcon}
+              aria-label="Archive"
+              onClick={handleArchive}
+            >
+              <ArchiveOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        )}
 
         {/* More options */}
-        <CardBottomButton
+        <ButtonWithPopper
           icon={<MoreVertOutlinedIcon />}
           popper={<MorePoppper item={item} />}
           label="more-popper"

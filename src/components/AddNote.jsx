@@ -131,7 +131,7 @@ function AddNote() {
               handleCurrentColor={handleCurrentColor}
               closeButton={
                 <Button variant="text" onClick={handleSubmit} color="default">
-                  Cancel
+                  Close
                 </Button>
               }
             />

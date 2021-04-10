@@ -8,13 +8,16 @@ import Typography from "@material-ui/core/Typography";
 import ModalCard from "./ModalCard";
 import CardBottom from "./CardBottom";
 import { updateNote } from "../firebase";
+import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutlined";
+import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
+import { IconButton, Tooltip } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginBottom: theme.spacing(2),
     backgroundColor: "inherit",
-
     transition: "all .3s ease",
+    position: "relative",
   },
   bottomMenu: {
     width: "100%",
@@ -24,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
   smallIcon: {
     zIndex: 10,
+    padding: 4,
     "& svg": {
       fontSize: 18,
     },
@@ -45,35 +49,34 @@ const useStyles = makeStyles((theme) => ({
       border: "1px solid #fff",
     },
   },
+  pinIcon: {
+    position: "absolute",
+    right: 10,
+    top: 10,
+    marginLeft: 10,
+  },
 }));
 
 export default function CustomCard({ item }) {
   const classes = useStyles();
   const [showBottom, setShowBottom] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const { title, content, color, photoURL, docID } = item;
+  const { title, content, color, photoURL, isPinned, docID } = item;
   const [currentColor, setCurrentColor] = useState("");
 
-  // const [newState, setNewState] = useState({
-  //   id: 1,
-  //   title: "",
-  //   content: "",
-  //   color: "#442f19",
-  //   isArchived: false,
-  //   isPinned: false,
-  //   isTrash: false,
-  //   remindTime: "",
-  //   photoURL: "",
-  //   labels: [],
-  //   edited: "",
-  // });
-
-  const handleCurrentColor = (c) => {
-    updateNote(docID, { color: c });
-  };
   useEffect(() => {
     setCurrentColor(color);
   }, [color]);
+
+  const handlePin = () => {
+    updateNote(docID, { isPinned: true });
+  };
+  const handleUnpin = () => {
+    updateNote(docID, { isPinned: false });
+  };
+  const handleCurrentColor = (c) => {
+    updateNote(docID, { color: c });
+  };
   return (
     <>
       <ModalCard
@@ -91,6 +94,21 @@ export default function CustomCard({ item }) {
         onMouseEnter={() => setShowBottom(true)}
         onMouseLeave={() => setShowBottom(false)}
       >
+        <div className={classes.pinIcon}>
+          {isPinned ? (
+            <Tooltip title="Unpin note">
+              <IconButton onClick={handleUnpin} className={classes.smallIcon}>
+                <BookmarkOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip title="Pin note">
+              <IconButton onClick={handlePin} className={classes.smallIcon}>
+                <BookmarkBorderOutlinedIcon />
+              </IconButton>
+            </Tooltip>
+          )}
+        </div>
         <div onClick={() => setShowModal(true)}>
           {photoURL && (
             <CardMedia

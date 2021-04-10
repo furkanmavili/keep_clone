@@ -62,6 +62,9 @@ const defaultNote = {
   edited: firebase.firestore.FieldValue.serverTimestamp(),
   owner: "",
   photoURL: "",
+  isPinned: false,
+  isArchived: false,
+  labels: [], 
 };
 // Adding new note
 export const addNote = async (data) => {

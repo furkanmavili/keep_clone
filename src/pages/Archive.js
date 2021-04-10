@@ -1,6 +1,7 @@
 import React from "react";
+import CardList from "../components/CardList";
 
 function Archive() {
-  return <h1>Archive pages</h1>;
+  return <CardList filterCallback={(i) => i["isArchived"]} />;
 }
 export default Archive;

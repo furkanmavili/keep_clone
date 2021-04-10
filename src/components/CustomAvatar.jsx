@@ -4,6 +4,7 @@ import Popper from "@material-ui/core/Popper";
 import Fade from "@material-ui/core/Fade";
 import { Avatar, Button, Divider, Typography } from "@material-ui/core";
 import { logOut } from "../firebase";
+
 const useStyles = makeStyles((theme) => ({
   paper: {
     backgroundColor: theme.palette.background.dark,
@@ -70,9 +71,7 @@ export default function CustomAvatar({ user }) {
         type="button"
         onClick={handleClick}
       >
-        <Avatar className={classes.avatar} src={user.photoURL}>
-          H
-        </Avatar>
+        <Avatar className={classes.avatar} src={user.photoURL}></Avatar>
       </button>
       <Popper
         style={{ zIndex: 1202 }}
