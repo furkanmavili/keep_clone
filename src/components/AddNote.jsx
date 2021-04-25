@@ -1,9 +1,8 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useContext, useState } from "react";
-import { Button, ClickAwayListener, InputBase } from "@material-ui/core";
+import { ClickAwayListener, InputBase } from "@material-ui/core";
 import { addNote } from "../firebase";
-import CardBottom from "./CardBottom";
 import { UserContext } from "../providers/UserProvider";
 
 const useStyles = makeStyles((theme) => ({
@@ -125,9 +124,8 @@ function AddNote() {
             onClick={() => setIsNamedFocused(true)}
             onChange={(e) => handleState("content", e.target.value)}
           />
-          {isNameFocused && (
+          {/* {isNameFocused && (
             <CardBottom
-              isNew={true}
               handleCurrentColor={handleCurrentColor}
               closeButton={
                 <Button variant="text" onClick={handleSubmit} color="default">
@@ -135,7 +133,7 @@ function AddNote() {
                 </Button>
               }
             />
-          )}
+          )} */}
         </div>
       </ClickAwayListener>
     </div>
