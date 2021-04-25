@@ -2,13 +2,14 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
+
 var firebaseConfig = {
-  apiKey: "AIzaSyBy0lcE2Txm3kLsNwOjKN5ZxxsmTY1Xmt4",
-  authDomain: "keepnote-208bd.firebaseapp.com",
-  projectId: "keepnote-208bd",
-  storageBucket: "keepnote-208bd.appspot.com",
-  messagingSenderId: "808400154746",
-  appId: "1:808400154746:web:122bdd1714f55dc1c3cbc3",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
   measurementId: "G-2W563GCDZY",
 };
 // Initialize Firebase
@@ -64,7 +65,7 @@ const defaultNote = {
   photoURL: "",
   isPinned: false,
   isArchived: false,
-  labels: [], 
+  labels: [],
 };
 // Adding new note
 export const addNote = async (data) => {
