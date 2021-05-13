@@ -1,17 +1,17 @@
-import { useContext, useEffect, useState } from "react";
-import { addNote, storage, updateNote } from "../firebase";
-import { UserContext } from "../providers/UserProvider";
+import { useEffect, useState } from "react";
+import { addNote, storage, updateNote } from "../firebase/store";
+import { useAuth } from "../firebase/auth";
 
 const useStorage = (file, docID) => {
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState(null);
   const [url, setUrl] = useState(null);
-  const user = useContext(UserContext);
+  const { user } = useAuth();
   useEffect(() => {
     // references
     if (!file) return;
     const storageRef = storage.ref(file.name);
-    storageRef.put(file).on(
+    const unsubscribe = storageRef.put(file).on(
       "state_changed",
       (snap) => {
         const percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
@@ -25,11 +25,12 @@ const useStorage = (file, docID) => {
         if (docID) {
           updateNote(docID, { photoURL: url });
         } else {
-          addNote({ owner: user.uid, photoURL: url });
+          addNote({ photoURL: url });
         }
         setUrl(url);
       }
     );
+    return () => unsubscribe();
   }, [file, docID, user.uid]);
   return { progress, error, url };
 };

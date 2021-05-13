@@ -7,7 +7,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import ModalCard from "./ModalCard";
 import CardBottom from "./CardBottom";
-import { updateNote } from "../firebase";
+import { updateNote } from "../firebase/store";
 import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutlined";
 import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
 import { IconButton, Tooltip } from "@material-ui/core";
@@ -74,9 +74,6 @@ export default function CustomCard({ item }) {
   const handleUnpin = () => {
     updateNote(docID, { isPinned: false });
   };
-  const handleCurrentColor = (c) => {
-    updateNote(docID, { color: c });
-  };
   return (
     <>
       <ModalCard
@@ -111,13 +108,7 @@ export default function CustomCard({ item }) {
         </div>
         <div onClick={() => setShowModal(true)}>
           {photoURL && (
-            <CardMedia
-              component="img"
-              alt={title}
-              height="140"
-              image={photoURL}
-              title={title}
-            />
+            <CardMedia component="img" alt={title} height="140" image={photoURL} title={title} />
           )}
           <CardContent>
             {title && (
@@ -140,7 +131,7 @@ export default function CustomCard({ item }) {
 
         <CardActions style={{ minHeight: 58 }}>
           {showBottom && (
-            <CardBottom handleCurrentColor={handleCurrentColor} item={item} />
+            <CardBottom item={item} colorCallback={(i) => updateNote(docID, { color: i })} />
           )}
         </CardActions>
       </Card>

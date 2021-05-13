@@ -1,8 +1,8 @@
-import React, { useEffect, useContext } from "react";
-import { signInWithGoogle } from "../firebase";
-import { UserContext } from "../providers/UserProvider";
+import React, { useEffect } from "react";
+import { signInWithGoogle } from "../firebase/auth";
 import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
+import { useAuth } from "../firebase/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,9 +32,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function Login() {
-  const user = useContext(UserContext);
+  const { user } = useAuth();
   const history = useHistory();
   const classes = useStyles();
+
   useEffect(() => {
     if (user) {
       history.push("/home");

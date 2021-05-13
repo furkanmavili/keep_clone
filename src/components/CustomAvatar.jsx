@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Popper from "@material-ui/core/Popper";
 import Fade from "@material-ui/core/Fade";
 import { Avatar, Button, Divider, Typography } from "@material-ui/core";
-import { logOut } from "../firebase";
+import { useAuth } from "../firebase/auth";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -53,7 +53,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomAvatar({ user }) {
+export default function CustomAvatar() {
+  const { user, logout } = useAuth();
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = (event) => {
@@ -65,21 +66,10 @@ export default function CustomAvatar({ user }) {
 
   return (
     <div>
-      <button
-        className={classes.button}
-        aria-describedby={id}
-        type="button"
-        onClick={handleClick}
-      >
+      <button className={classes.button} aria-describedby={id} type="button" onClick={handleClick}>
         <Avatar className={classes.avatar} src={user.photoURL}></Avatar>
       </button>
-      <Popper
-        style={{ zIndex: 1202 }}
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        transition
-      >
+      <Popper style={{ zIndex: 1202 }} id={id} open={open} anchorEl={anchorEl} transition>
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={250}>
             <div className={classes.paper}>
@@ -87,8 +77,10 @@ export default function CustomAvatar({ user }) {
                 <Avatar className={classes.bigAvatar} src={user.photoURL}>
                   H
                 </Avatar>
-                <Typography>{user.displayName}</Typography>
-                <Typography variant="subtitle2">{user.email}</Typography>
+                <Typography color="textSecondary">{user.displayName}</Typography>
+                <Typography color="textSecondary" variant="subtitle2">
+                  {user.email}
+                </Typography>
                 <Button
                   target="_blank"
                   href="https://myaccount.google.com/"
@@ -99,11 +91,7 @@ export default function CustomAvatar({ user }) {
                 </Button>
               </div>
               <Divider />
-              <Button
-                variant="outlined"
-                className={classes.logout}
-                onClick={logOut}
-              >
+              <Button variant="outlined" className={classes.logout} onClick={logout}>
                 Logout
               </Button>
               <Divider />

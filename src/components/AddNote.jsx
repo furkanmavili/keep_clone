@@ -1,9 +1,9 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import { useContext, useState } from "react";
-import { ClickAwayListener, InputBase } from "@material-ui/core";
-import { addNote } from "../firebase";
-import { UserContext } from "../providers/UserProvider";
+import { useState } from "react";
+import { Button, ClickAwayListener, InputBase } from "@material-ui/core";
+import { addNote } from "../firebase/store";
+import CardBottom from "./CardBottom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(1, 2),
     transition: "all .3s ease",
+    boxShadow: "0 1px 2px 0 rgb(0 0 0 / 60%), 0 2px 6px 2px rgb(0 0 0 / 30%)",
   },
   flex: {
     display: "flex",
@@ -60,7 +61,6 @@ function AddNote() {
     labels: [],
     edited: "",
   });
-  const user = useContext(UserContext);
   const [isNameFocused, setIsNamedFocused] = useState(false);
   const classes = useStyles();
 
@@ -76,7 +76,6 @@ function AddNote() {
         title: state.title,
         content: state.content,
         color: state.color,
-        owner: user.uid,
       });
       if (result) {
         handleState("title", "");
@@ -124,20 +123,20 @@ function AddNote() {
             onClick={() => setIsNamedFocused(true)}
             onChange={(e) => handleState("content", e.target.value)}
           />
-          {/* {isNameFocused && (
+          {isNameFocused && (
             <CardBottom
-              handleCurrentColor={handleCurrentColor}
+              item={false}
+              colorCallback={handleCurrentColor}
               closeButton={
                 <Button variant="text" onClick={handleSubmit} color="default">
                   Close
                 </Button>
               }
             />
-          )} */}
+          )}
         </div>
       </ClickAwayListener>
     </div>
   );
 }
-
 export default AddNote;

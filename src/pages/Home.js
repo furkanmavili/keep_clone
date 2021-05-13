@@ -1,17 +1,18 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddNote from "../components/AddNote";
 import CardList from "../components/CardList";
-import { getNotes } from "../firebase";
-import { UserContext } from "../providers/UserProvider";
+import { getNotesRef } from "../firebase/store";
+import { useAuth } from "../firebase/auth";
+import { Typography } from "@material-ui/core";
 
 function Home() {
   const [notes, setNotes] = useState([]);
-  const user = useContext(UserContext);
+  const { user } = useAuth();
   useEffect(() => {
     if (!user) return;
-    const ref = getNotes(user);
+    const ref = getNotesRef(user);
     if (ref) {
-      ref.onSnapshot((querySnapshot) => {
+      const cancelSnapshot = ref.onSnapshot((querySnapshot) => {
         const items = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
@@ -20,6 +21,7 @@ function Home() {
         });
         const filtered = items.filter((i) => !i["isArchived"]);
         setNotes(filtered);
+        return () => cancelSnapshot();
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -30,10 +32,14 @@ function Home() {
       <AddNote />
       {notes.filter((i) => i["isPinned"]).length > 0 ? (
         <>
-          <h1>pinned:</h1>
+          <Typography color="textSecondary" variant="caption">
+            PINNED
+          </Typography>
           <CardList notes={notes.filter((i) => i["isPinned"])} />
-
-          <h1>Others</h1>
+          <Spacer />
+          <Typography color="textSecondary" variant="caption">
+            OTHERS
+          </Typography>
           <CardList notes={notes.filter((i) => !i["isPinned"])} />
         </>
       ) : (
@@ -41,6 +47,10 @@ function Home() {
       )}
     </>
   );
+}
+
+function Spacer() {
+  return <div style={{ marginTop: 60 }} />;
 }
 
 export default Home;

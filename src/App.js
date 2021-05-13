@@ -1,15 +1,23 @@
 import React from "react";
 import { ThemeProvider } from "@material-ui/core/styles";
-import UserProvider from "./providers/UserProvider";
+import DrawerProvider from "./providers/DrawerProvider";
+import { BrowserRouter } from "react-router-dom";
 import { dark } from "./theme";
-import Layout from "./Layout";
+import Layout from "./pages/Layout";
+import { CssBaseline } from "@material-ui/core";
+import { AuthProvider } from "./firebase/auth";
 function App() {
   return (
-    <UserProvider>
-      <ThemeProvider theme={dark}>
-        <Layout />
-      </ThemeProvider>
-    </UserProvider>
+    <AuthProvider>
+      <DrawerProvider>
+        <CssBaseline />
+        <ThemeProvider theme={dark}>
+          <BrowserRouter>
+            <Layout />
+          </BrowserRouter>
+        </ThemeProvider>
+      </DrawerProvider>
+    </AuthProvider>
   );
 }
 
