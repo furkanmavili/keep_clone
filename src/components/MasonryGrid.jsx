@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     marginLeft: theme.spacing(-5),
     width: "inherit",
-    marginTop: theme.spacing(5),
+    marginTop: theme.spacing(3),
   },
   masonryColumn: {
     paddingLeft: theme.spacing(4),
