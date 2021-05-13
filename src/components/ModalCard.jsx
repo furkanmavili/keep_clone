@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -6,8 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { IconButton, InputBase, makeStyles, useTheme } from "@material-ui/core";
 import CardBottom from "./CardBottom";
-import { updateNote } from "../firebase";
-import { UserContext } from "../providers/UserProvider";
+import { updateNote } from "../firebase/store";
 import { DeleteOutline } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -72,9 +71,7 @@ function calculateEdited(date) {
   const dif = new Date().getTime() - date.getTime();
   const dayDif = dif / (1000 * 3600 * 24);
   if (dayDif > 1) {
-    return (
-      date.toLocaleString("en-En", { month: "long" }) + " " + date.getDate()
-    );
+    return date.toLocaleString("en-En", { month: "long" }) + " " + date.getDate();
   }
   return date.getHours() + ":" + date.getMinutes();
 }
@@ -86,7 +83,6 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
   const [newContent, setNewContent] = useState("");
   const [newColor, setNewColor] = useState("");
   const [showImageButton, setShowImageButton] = useState(false);
-  const user = useContext(UserContext);
 
   useEffect(() => {
     setNewTitle(title);
@@ -100,16 +96,11 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
     });
   };
   const handleClose = () => {
-    if (
-      title !== newTitle ||
-      content !== newContent ||
-      currentColor !== newColor
-    ) {
+    if (title !== newTitle || content !== newContent || currentColor !== newColor) {
       updateNote(item["docID"], {
         title: newTitle,
         content: newContent,
         color: newColor,
-        owner: user.uid,
       });
     }
 
@@ -125,9 +116,7 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
         PaperProps={{
           className: classes.root,
           style: {
-            backgroundColor: newColor
-              ? newColor
-              : theme.palette.background.paper,
+            backgroundColor: newColor ? newColor : theme.palette.background.paper,
           },
           elevation: 5,
         }}
@@ -141,11 +130,7 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
           >
             <img style={{ width: "100%" }} src={photoURL} alt={title} />
             {showImageButton && (
-              <IconButton
-                onClick={handleImageButton}
-                size="small"
-                className={classes.imageButton}
-              >
+              <IconButton onClick={handleImageButton} size="small" className={classes.imageButton}>
                 <DeleteOutline />
               </IconButton>
             )}
@@ -191,9 +176,7 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
                 Close
               </Button>
             }
-            handleCurrentColor={(c) =>
-              setNewColor(new Date(edited["seconds"] * 1000))
-            }
+            handleCurrentColor={(c) => setNewColor(new Date(edited["seconds"] * 1000))}
             item={item}
           />
         </DialogActions>
