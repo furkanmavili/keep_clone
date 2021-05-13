@@ -1,4 +1,4 @@
-import { IconButton, makeStyles } from "@material-ui/core";
+import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import { ImageOutlined } from "@material-ui/icons";
 import React, { forwardRef, useState } from "react";
 import useStorage from "../hooks/useStorage";
@@ -39,7 +39,7 @@ const UploadPhoto = forwardRef((props, ref) => {
     }
   };
   return (
-    <div>
+    <>
       <input
         accept="image/*"
         className={classes.input}
@@ -48,16 +48,18 @@ const UploadPhoto = forwardRef((props, ref) => {
         onChange={handleChange}
       />
       <label htmlFor="icon-button-file">
-        <IconButton
-          ref={ref}
-          className={classes.smallIcon}
-          aria-label="upload picture"
-          component="span"
-        >
-          <ImageOutlined />
-        </IconButton>
+        <Tooltip title="Upload image">
+          <IconButton
+            ref={ref}
+            className={classes.smallIcon}
+            aria-label="upload picture"
+            component="span"
+          >
+            <ImageOutlined />
+          </IconButton>
+        </Tooltip>
       </label>
-    </div>
+    </>
   );
 });
 
