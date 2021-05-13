@@ -10,70 +10,49 @@ import Search from "../pages/Search";
 import Login from "../pages/Login";
 import Home from "../pages/Home";
 import Edit from "../pages/Edit";
-const routes = [
-  {
+const routes = {
+  home: {
     icon: <EmojiObjectsIcon />,
     text: "Notes",
     to: "/home",
+    component: Home,
   },
-  {
+  reminders: {
     icon: <NotificationsNoneIcon />,
     text: "Reminders",
     to: "/reminders",
+    component: Reminders,
   },
-  {
+  edit: {
     icon: <CreateIcon />,
     text: "Edit Labels",
     to: "/edit",
+    component: Edit,
   },
-  {
+  archive: {
     icon: <ArchiveOutlinedIcon />,
     text: "Archive",
     to: "/archive",
+    component: Archive,
   },
-  {
+  trash: {
     icon: <DeleteOutlinedIcon />,
     text: "Trash",
     to: "/trash",
-  },
-];
-
-export const routerRoutes = [
-  {
-    to: "/home",
-    isPrivate: true,
-    component: Home,
-  },
-  {
-    to: "/reminders",
-    isPrivate: true,
-    component: Reminders,
-  },
-  {
-    to: "/edit",
-    isPrivate: true,
-    component: Edit,
-  },
-  {
-    to: "/archive",
-    isPrivate: true,
-    component: Archive,
-  },
-  {
-    to: "/trash",
-    isPrivate: true,
     component: Trash,
   },
-  {
-    to: "/search",
-    isPrivate: true,
-    component: Search,
-  },
-  {
+  login: {
+    icon: <> </>,
+    text: "Login",
     to: "/login",
-    isPrivate: false,
     component: Login,
   },
-];
+  search: {
+    icon: <>Search</>,
+    text: "Search",
+    to: "/search",
+    component: Search,
+  },
+};
 
 export default routes;

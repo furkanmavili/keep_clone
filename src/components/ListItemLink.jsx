@@ -7,13 +7,22 @@ import { Link as RouterLink, useRouteMatch } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 const useStyles = makeStyles((theme) => ({
+  root: {},
+
   listItemOpen: {
     borderTopRightRadius: "25px",
     borderBottomRightRadius: "25px",
+    paddingLeft: theme.spacing(2),
   },
   listItemClose: {
     borderRadius: "53%",
+    width: "48px",
+    paddingLeft: 0,
+    marginLeft: theme.spacing(2),
     transition: "all .3s ease",
+  },
+  icon: {
+    paddingLeft: "12px",
   },
 }));
 function ListItemLink(props) {
@@ -33,7 +42,7 @@ function ListItemLink(props) {
 
   return (
     <ListItem
-      className={clsx(classes.drawer, {
+      className={clsx(classes.root, {
         [classes.listItemOpen]: open,
         [classes.listItemClose]: !open,
       })}
@@ -45,6 +54,7 @@ function ListItemLink(props) {
     >
       {icon ? (
         <ListItemIcon
+          className={classes.icon}
           style={{ color: match ? "#e8eaed" : "rgba(255,255,255,.3)" }}
         >
           {icon}
