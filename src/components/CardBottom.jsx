@@ -1,21 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import MoreVertOutlinedIcon from "@material-ui/icons/MoreVertOutlined";
 import UnarchiveOutlinedIcon from "@material-ui/icons/UnarchiveOutlined";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { makeStyles } from "@material-ui/core/styles";
 import colors from "../constants/colors";
-import { deleteNote, updateNote } from "../firebase";
+import { deleteNote, updateNote } from "../firebase/store";
 import UploadPhoto from "./UploadPhoto";
-import {
-  IconButton,
-  List,
-  ListItem,
-  ListItemText,
-  Popper,
-  Tooltip,
-} from "@material-ui/core";
+import { IconButton, List, ListItem, ListItemText, Popper, Tooltip } from "@material-ui/core";
+import Toast from "./Toast";
 
 const useStyles = makeStyles((theme) => ({
   bottomMenu: {
@@ -102,10 +97,13 @@ function ButtonWithPopper({ label, placement, popper, icon, title }) {
   );
 }
 
-export default function CardBottom({ handleCurrentColor, item, closeButton }) {
+export default function CardBottom({ item, closeButton, colorCallback }) {
   const classes = useStyles();
+  const [toastMessage, setToastMessage] = useState("");
+  const [openToast, setOpenToast] = useState(false);
 
   const handleArchive = () => {
+    if (!item) return;
     updateNote(item["docID"], { isArchived: true });
   };
   const handleUnarchive = () => {
@@ -121,20 +119,26 @@ export default function CardBottom({ handleCurrentColor, item, closeButton }) {
           label="color-popper"
           title="Remind me"
         />
-
+        <Tooltip title="Collaborator">
+          <IconButton
+            className={classes.smallIcon}
+            aria-label="Add collaborator"
+            onClick={() => {}}
+          >
+            <PersonAddIcon />
+          </IconButton>
+        </Tooltip>
         {/* Color picker for card */}
         <ButtonWithPopper
           icon={<PaletteOutlinedIcon />}
-          popper={<ColorPalette handleCurrentColor={handleCurrentColor} />}
+          popper={<ColorPalette click={colorCallback} />}
           label="color-popper"
           placement="top-start"
           title="Color"
         />
 
         {/* Image upload */}
-        <Tooltip title="Add Image">
-          <UploadPhoto docID={item ? item["docID"] : ""} />
-        </Tooltip>
+        {item && <UploadPhoto docID={item["docID"]} />}
 
         {/* Archive note */}
         {item["isArchived"] ? (
@@ -149,11 +153,7 @@ export default function CardBottom({ handleCurrentColor, item, closeButton }) {
           </Tooltip>
         ) : (
           <Tooltip title="Archive">
-            <IconButton
-              className={classes.smallIcon}
-              aria-label="Archive"
-              onClick={handleArchive}
-            >
+            <IconButton className={classes.smallIcon} aria-label="Archive" onClick={handleArchive}>
               <ArchiveOutlinedIcon />
             </IconButton>
           </Tooltip>
@@ -170,22 +170,23 @@ export default function CardBottom({ handleCurrentColor, item, closeButton }) {
       </div>
 
       {closeButton}
+      <Toast message={toastMessage} open={openToast} setOpen={setOpenToast} />
     </div>
   );
 }
 
 // Popper for Color Picking
-function ColorPalette({ handleCurrentColor }) {
+function ColorPalette({ click }) {
   const classes = useStyles();
   return (
     <div className={classes.paper}>
       <div className={classes.circleWrapper}>
-        {colors.map((item, index) => (
+        {colors.map((i, index) => (
           <div
             key={index}
-            onClick={() => handleCurrentColor(item)}
+            onClick={() => click(i)}
             className={classes.circle}
-            style={{ backgroundColor: item }}
+            style={{ backgroundColor: i }}
           ></div>
         ))}
       </div>
@@ -197,6 +198,7 @@ const MorePopperStyles = makeStyles((theme) => ({
   root: {
     boxShadow: "0 1px 2px 0 rgb(0 0 0 / 60%), 0 2px 6px 2px rgb(0 0 0 / 30%)",
     backgroundColor: "#202124",
+    color: theme.palette.text.primary,
     borderRadius: 4,
   },
 }));
@@ -211,9 +213,12 @@ function MorePoppper({ item }) {
   return (
     <div className={classes.root}>
       <List dense component="nav" aria-label="More options">
-        <ListItem button onClick={handleDelete}>
-          <ListItemText primary="Delete Note" />
-        </ListItem>
+        {item && (
+          <ListItem button onClick={handleDelete}>
+            <ListItemText primary="Delete Note" />
+          </ListItem>
+        )}
+
         <ListItem button>
           <ListItemText primary="Add label" />
         </ListItem>
