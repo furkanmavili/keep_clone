@@ -1,7 +1,7 @@
 import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import { ImageOutlined } from "@material-ui/icons";
-import React, { forwardRef, useState } from "react";
-import useStorage from "../hooks/useStorage";
+import React, { forwardRef, useEffect, useState } from "react";
+import { addNote, storage, updateNote } from "../firebase/store";
 
 const useStyles = makeStyles((theme) => ({
   smallIcon: {
@@ -21,11 +21,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UploadPhoto = forwardRef((props, ref) => {
+const UploadPhoto = (props) => {
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
-  const { url, progress } = useStorage(file, props.docID);
+  const [url, setURL] = useState("");
   const classes = useStyles();
+
+  useEffect(() => {
+    if (!file) return;
+    const storageRef = storage.ref(props.docID);
+    const unsubscribe = storageRef.put(file).on(
+      "state_changed",
+      (snap) => {
+        const percentage = (snap.bytesTransferred / snap.totalBytes) * 100;
+      },
+      (err) => {
+        setError(err);
+      },
+      async () => {
+        const url = await storageRef.getDownloadURL();
+        if (props.docID) {
+          updateNote(props.docID, { photoURL: url });
+        } else {
+          addNote({ photoURL: url });
+        }
+        unsubscribe();
+      }
+    );
+  }, [file, props.docID]);
 
   const handleChange = (e) => {
     let selected = e.target.files[0];
@@ -49,18 +72,13 @@ const UploadPhoto = forwardRef((props, ref) => {
       />
       <label htmlFor="icon-button-file">
         <Tooltip title="Upload image">
-          <IconButton
-            ref={ref}
-            className={classes.smallIcon}
-            aria-label="upload picture"
-            component="span"
-          >
+          <IconButton className={classes.smallIcon} aria-label="upload picture" component="span">
             <ImageOutlined />
           </IconButton>
         </Tooltip>
       </label>
     </>
   );
-});
+};
 
 export default UploadPhoto;
