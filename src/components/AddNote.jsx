@@ -1,16 +1,17 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import { useState } from "react";
-import { Button, ClickAwayListener, InputBase } from "@material-ui/core";
+import { Button, ClickAwayListener, IconButton, InputBase, Tooltip } from "@material-ui/core";
 import { addNote } from "../firebase/store";
 import CardBottom from "./CardBottom";
+import { CheckBoxOutlined, GestureOutlined, ImageOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     maxWidth: 600,
     borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(1, 2),
+    padding: theme.spacing(0.25, 2),
     transition: "all .3s ease",
     boxShadow: "0 1px 2px 0 rgb(0 0 0 / 60%), 0 2px 6px 2px rgb(0 0 0 / 30%)",
   },
@@ -46,6 +47,17 @@ const useStyles = makeStyles((theme) => ({
       border: "1px solid #fff",
     },
   },
+  note: {
+    display: "flex",
+    alignItems: "center",
+  },
+  input: {
+    display: "block",
+    flex: 1,
+  },
+  icon: {
+    margin: theme.spacing(0, 1),
+  },
 }));
 
 function AddNote() {
@@ -71,6 +83,7 @@ function AddNote() {
     handleState("color", c);
   };
   const handleSubmit = () => {
+    if (!isNameFocused) return;
     if (state.title || state.content) {
       const result = addNote({
         title: state.title,
@@ -114,15 +127,18 @@ function AddNote() {
               onChange={(e) => handleState("title", e.target.value)}
             />
           )}
-          <InputBase
-            autoFocus
-            value={state.content}
-            multiline
-            placeholder="Take a note.."
-            style={{ display: "block" }}
-            onClick={() => setIsNamedFocused(true)}
-            onChange={(e) => handleState("content", e.target.value)}
-          />
+          <div className={classes.note}>
+            <InputBase
+              autoFocus
+              value={state.content}
+              multiline
+              placeholder="Take a note.."
+              className={classes.input}
+              onClick={() => setIsNamedFocused(true)}
+              onChange={(e) => handleState("content", e.target.value)}
+            />
+            {!isNameFocused && <OtherNoteMethods />}
+          </div>
           {isNameFocused && (
             <CardBottom
               item={false}
@@ -139,4 +155,27 @@ function AddNote() {
     </div>
   );
 }
+function OtherNoteMethods() {
+  const classes = useStyles();
+  return (
+    <div>
+      <Tooltip title="Add list">
+        <IconButton className={classes.icon}>
+          <CheckBoxOutlined />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Add drawing">
+        <IconButton className={classes.icon}>
+          <GestureOutlined />
+        </IconButton>
+      </Tooltip>
+      <Tooltip title="Add Image">
+        <IconButton className={classes.icon}>
+          <ImageOutlined />
+        </IconButton>
+      </Tooltip>
+    </div>
+  );
+}
+
 export default AddNote;
