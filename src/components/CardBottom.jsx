@@ -9,7 +9,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import colors from "../constants/colors";
 import { deleteNote, updateNote } from "../firebase/store";
 import UploadPhoto from "./UploadPhoto";
-import { IconButton, List, ListItem, ListItemText, Popper, Tooltip } from "@material-ui/core";
+import {
+  ClickAwayListener,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Popper,
+  Tooltip,
+} from "@material-ui/core";
 import Toast from "./Toast";
 
 const useStyles = makeStyles((theme) => ({
@@ -26,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
     maxWidth: 300,
     paddingLeft: theme.spacing(1),
+    marginLeft: theme.spacing(-1.5),
   },
   smallIcon: {
     zIndex: 10,
@@ -70,29 +79,36 @@ function ButtonWithPopper({ label, placement, popper, icon, title }) {
   const handleColor = (event) => {
     setanchorEl(anchorEl ? null : event.currentTarget);
   };
+  const handleClose = () => {
+    setanchorEl(false);
+  };
   const open = Boolean(anchorEl);
   const id = open ? label : undefined;
   return (
     <>
-      <Tooltip title={title}>
-        <IconButton
-          aria-describedby={id}
-          onClick={handleColor}
-          className={classes.smallIcon}
-          aria-label="Color"
-        >
-          {icon}
-        </IconButton>
-      </Tooltip>
-      <Popper
-        style={{ zIndex: 9999 }}
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        placement={placement}
-      >
-        {popper}
-      </Popper>
+      <ClickAwayListener onClickAway={handleClose}>
+        <div>
+          <Tooltip title={title}>
+            <IconButton
+              aria-describedby={id}
+              onClick={handleColor}
+              className={classes.smallIcon}
+              aria-label="Color"
+            >
+              {icon}
+            </IconButton>
+          </Tooltip>
+          <Popper
+            style={{ zIndex: 9999 }}
+            id={id}
+            open={open}
+            anchorEl={anchorEl}
+            placement={placement}
+          >
+            {popper}
+          </Popper>
+        </div>
+      </ClickAwayListener>
     </>
   );
 }
@@ -101,7 +117,6 @@ export default function CardBottom({ item, closeButton, colorCallback }) {
   const classes = useStyles();
   const [toastMessage, setToastMessage] = useState("");
   const [openToast, setOpenToast] = useState(false);
-
   const handleArchive = () => {
     if (!item) return;
     updateNote(item["docID"], { isArchived: true });
