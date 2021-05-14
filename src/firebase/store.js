@@ -8,8 +8,12 @@ function getCurrentUser() {
 }
 export const getNotesRef = (user) => {
   if (!user) return;
-  console.log(getCurrentUser());
   const ref = db.collection(user.uid);
+  return ref;
+};
+
+export const getSingleNote = (docID) => {
+  const ref = db.collection(getCurrentUser()).doc(docID);
   return ref;
 };
 
@@ -26,7 +30,6 @@ const defaultNote = {
 };
 
 export const addNote = async (data) => {
-  console.log(getCurrentUser());
   const ref = db.collection(getCurrentUser());
   console.log("adding new note...");
   const res = await ref.add({
@@ -40,6 +43,8 @@ export const addNote = async (data) => {
 export const updateNote = async (docID, data) => {
   const ref = db.collection(getCurrentUser());
   const doc = ref.doc(docID);
+  console.log("doc id:", docID);
+  console.log("doc ref:", doc);
   console.log("updating note..");
   const res = await doc.update({
     ...data,
