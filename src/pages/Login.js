@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { signInWithGoogle } from "../firebase/auth";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { makeStyles } from "@material-ui/core";
 import { useAuth } from "../firebase/auth";
 
@@ -35,12 +35,14 @@ export default function Login() {
   const { user } = useAuth();
   const history = useHistory();
   const classes = useStyles();
-
+  let location = useLocation();
+  console.log(location);
+  let { from } = location.state || { from: { pathname: "/" } };
   useEffect(() => {
     if (user) {
-      history.push("/home");
+      history.replace(from);
     }
-  }, [user, history]);
+  }, [user, history, from]);
 
   return (
     <div className={classes.page}>

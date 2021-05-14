@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import ModalCard from "./ModalCard";
 import CardBottom from "./CardBottom";
 import { updateNote } from "../firebase/store";
 import BookmarkBorderOutlinedIcon from "@material-ui/icons/BookmarkBorderOutlined";
 import BookmarkOutlinedIcon from "@material-ui/icons/BookmarkOutlined";
 import { IconButton, Tooltip } from "@material-ui/core";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,17 +57,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomCard({ item }) {
+export default function CustomCard({ item, setShowModal }) {
   const classes = useStyles();
   const [showBottom, setShowBottom] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const { title, content, color, photoURL, isPinned, docID } = item;
-  const [currentColor, setCurrentColor] = useState("");
-
-  useEffect(() => {
-    setCurrentColor(color);
-  }, [color]);
-
+  const history = useHistory();
   const handlePin = () => {
     updateNote(docID, { isPinned: true });
   };
@@ -76,12 +70,6 @@ export default function CustomCard({ item }) {
   };
   return (
     <>
-      <ModalCard
-        item={item}
-        open={showModal}
-        setOpen={(value) => setShowModal(value)}
-        currentColor={currentColor}
-      />
       <Card
         className={classes.root}
         style={{
@@ -106,7 +94,7 @@ export default function CustomCard({ item }) {
             </Tooltip>
           )}
         </div>
-        <div onClick={() => setShowModal(true)}>
+        <div onClick={() => history.push("/home/" + docID)}>
           {photoURL && (
             <CardMedia component="img" alt={title} height="140" image={photoURL} title={title} />
           )}

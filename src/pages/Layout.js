@@ -31,8 +31,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NormalRoute = ({ component: Component, ...rest }) => {
-  const { user } = useAuth();
-  if (user) <Redirect to="/home" />;
   return <Route {...rest} render={(props) => <Component {...props} />} />;
 };
 
@@ -40,7 +38,19 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   const classes = useStyles();
   const { user } = useAuth();
   if (!user) {
-    return <Redirect to="/login" />;
+    return (
+      <Route
+        {...rest}
+        render={({ location }) => (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location },
+            }}
+          />
+        )}
+      />
+    );
   }
   return (
     <Route
@@ -66,6 +76,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
 function Layout() {
   return (
     <Switch>
+      <ProtectedRoute exact path="/home/:id" component={routes.home.component} />
       <ProtectedRoute exact path={routes.home.to} component={routes.home.component} />
       <ProtectedRoute exact path={routes.reminders.to} component={routes.reminders.component} />
       <ProtectedRoute exact path={routes.edit.to} component={routes.edit.component} />

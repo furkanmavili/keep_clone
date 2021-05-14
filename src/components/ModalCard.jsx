@@ -6,8 +6,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { IconButton, InputBase, makeStyles, useTheme } from "@material-ui/core";
 import CardBottom from "./CardBottom";
-import { updateNote } from "../firebase/store";
+import { getSingleNote, updateNote } from "../firebase/store";
 import { DeleteOutline } from "@material-ui/icons";
+import { useParams, useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,37 +76,55 @@ function calculateEdited(date) {
   }
   return date.getHours() + ":" + date.getMinutes();
 }
-export default function ModalCard({ open, setOpen, item, currentColor }) {
-  const { title, content, photoURL, edited } = item;
+export default function ModalCard({ open }) {
   const classes = useStyles();
   const theme = useTheme();
+  const [note, setNote] = useState(null);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newColor, setNewColor] = useState("");
   const [showImageButton, setShowImageButton] = useState(false);
+  const { id } = useParams();
+  const history = useHistory();
 
   useEffect(() => {
-    setNewTitle(title);
-    setNewContent(content);
-    setNewColor(currentColor);
-  }, [title, content, currentColor]);
+    if (!id) return;
+    const data = getSingleNote(id);
+    data
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          const docData = doc.data();
+          setNote(docData);
+          setNewTitle(docData.title);
+          setNewContent(docData.content);
+          setNewColor(docData.color);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+  }, [id]);
 
   const handleImageButton = () => {
-    updateNote(item["docID"], {
+    updateNote(id, {
       photoURL: "",
     });
   };
   const handleClose = () => {
-    if (title !== newTitle || content !== newContent || currentColor !== newColor) {
-      updateNote(item["docID"], {
-        title: newTitle,
-        content: newContent,
-        color: newColor,
-      });
-    }
-
-    setOpen(false);
+    updateNote(id, {
+      title: newTitle,
+      content: newContent,
+      color: newColor,
+    });
+    history.push("/");
   };
+  if (!note) {
+    return <></>;
+  }
   return (
     <div>
       <Dialog
@@ -122,13 +141,13 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
         }}
         scroll="paper"
       >
-        {photoURL && (
+        {note.photoURL && (
           <div
             className={classes.imageWrapper}
             onMouseEnter={() => setShowImageButton(true)}
             onMouseLeave={() => setShowImageButton(false)}
           >
-            <img style={{ width: "100%" }} src={photoURL} alt={title} />
+            <img style={{ width: "100%" }} src={note.photoURL} alt={note.title} />
             {showImageButton && (
               <IconButton onClick={handleImageButton} size="small" className={classes.imageButton}>
                 <DeleteOutline />
@@ -163,9 +182,9 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
             value={newContent}
             onChange={(e) => setNewContent(e.target.value)}
           />
-          {edited && (
+          {note.edited && (
             <div className={classes.edited}>
-              Edited {calculateEdited(new Date(edited["seconds"] * 1000))}
+              Edited {calculateEdited(new Date(note.edited["seconds"] * 1000))}
             </div>
           )}
         </DialogContent>
@@ -176,8 +195,8 @@ export default function ModalCard({ open, setOpen, item, currentColor }) {
                 Close
               </Button>
             }
-            handleCurrentColor={(c) => setNewColor(new Date(edited["seconds"] * 1000))}
-            item={item}
+            handleCurrentColor={(c) => setNewColor(new Date(note.edited["seconds"] * 1000))}
+            item={note}
           />
         </DialogActions>
       </Dialog>
