@@ -120,7 +120,7 @@ function AddNote() {
             </Typography>
           ) : (
             <InputBase
-              className={classes.margin}
+              className={classes.input}
               placeholder="Title"
               inputProps={{ "aria-label": "naked" }}
               value={state.title}
