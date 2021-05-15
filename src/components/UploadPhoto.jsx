@@ -1,6 +1,6 @@
 import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import { ImageOutlined } from "@material-ui/icons";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { addNote, storage, updateNote } from "../firebase/store";
 
 const useStyles = makeStyles((theme) => ({
