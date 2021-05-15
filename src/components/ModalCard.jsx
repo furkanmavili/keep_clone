@@ -113,14 +113,19 @@ export default function ModalCard({ open }) {
     updateNote(id, {
       photoURL: "",
     });
+    setNote({...note, photoURL: ''})
   };
   const handleClose = () => {
-    updateNote(id, {
-      title: newTitle,
-      content: newContent,
-      color: newColor,
-    });
+    const {title, content, color} = note
+    if (newTitle !== title || newContent !== content || newColor !== color) {
+      updateNote(id, {
+        title: newTitle,
+        content: newContent,
+        color: newColor,
+      });
+    } 
     history.push("/");
+    
   };
   if (!note) {
     return <></>;
