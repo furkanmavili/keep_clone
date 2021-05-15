@@ -43,8 +43,7 @@ export const addNote = async (data) => {
 export const updateNote = async (docID, data) => {
   const ref = db.collection(getCurrentUser());
   const doc = ref.doc(docID);
-  console.log("doc id:", docID);
-  console.log("doc ref:", doc);
+
   console.log("updating note..");
   const res = await doc.update({
     ...data,
