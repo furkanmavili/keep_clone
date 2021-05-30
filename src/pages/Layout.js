@@ -5,6 +5,8 @@ import CustomDrawer from "../components/Sidebar";
 import Header from "../components/Header";
 import routes from "../routes/index";
 import { useAuth } from "../firebase/auth";
+import Loading from "../components/Loading";
+import PageNotFound from "./PageNotFound";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,7 +38,10 @@ const NormalRoute = ({ component: Component, ...rest }) => {
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
   const classes = useStyles();
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  if (loading) {
+    return <Route {...rest} render={({ location }) => <Loading />} />;
+  }
   if (!user) {
     return (
       <Route
@@ -86,6 +91,9 @@ function Layout() {
       <NormalRoute exact path={routes.login.to} component={routes.login.component} />
       <Route exact path="/">
         <Redirect to="/home" />
+      </Route>
+      <Route path="*" exact={true}>
+        <PageNotFound />
       </Route>
     </Switch>
   );
