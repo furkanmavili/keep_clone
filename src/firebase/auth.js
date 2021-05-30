@@ -6,6 +6,7 @@ const AuthContext = createContext({
   loading: true,
   logout: () => {},
 });
+
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,9 +20,11 @@ const AuthProvider = ({ children }) => {
           photoURL,
           uid,
         });
+        await new Promise((r) => setTimeout(r, 2000));
         setLoading(false);
         return;
       }
+      await new Promise((r) => setTimeout(r, 2000));
       setUser(null);
       setLoading(false);
     });
@@ -29,9 +32,7 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{ user, loading, logout: () => firebase.auth().signOut() }}
-    >
+    <AuthContext.Provider value={{ user, loading, logout: () => firebase.auth().signOut() }}>
       {children}
     </AuthContext.Provider>
   );
