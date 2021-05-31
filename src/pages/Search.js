@@ -13,6 +13,7 @@ const getQueryParams = () =>
   window.location.search
     .replace("?", "")
     .split("&")
+    // eslint-disable-next-line no-sequences
     .reduce((r, e) => ((r[e.split("=")[0]] = decodeURIComponent(e.split("=")[1])), r), {});
 
 const validQueryParams = {
@@ -28,7 +29,6 @@ function Search() {
   const [filteredNotes, setFilteredNotes] = useState([]);
   const history = useHistory();
   const classes = useStyles();
-  console.log(history);
   useEffect(() => {
     if (notes.length === 0) return;
     const results = [];
@@ -53,8 +53,8 @@ function Search() {
       return appliedQueries.includes(false) ? false : true;
     });
     setFilteredNotes(filtered);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notes, history.location]);
-  console.log(filteredNotes);
 
   if (filteredNotes.length > 0) return <CardList notes={filteredNotes} />;
   return (

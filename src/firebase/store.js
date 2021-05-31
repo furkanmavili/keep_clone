@@ -33,7 +33,6 @@ const defaultNote = {
 
 export const addNote = async (data) => {
   const ref = db.collection(getCurrentUser());
-  console.log("adding new note...");
   const res = await ref.add({
     ...defaultNote,
     ...data,
@@ -45,8 +44,6 @@ export const addNote = async (data) => {
 export const updateNote = async (docID, data) => {
   const ref = db.collection(getCurrentUser());
   const doc = ref.doc(docID);
-
-  console.log("updating note..");
   const res = await doc.update({
     ...data,
     edited: firebase.firestore.FieldValue.serverTimestamp(),
@@ -58,8 +55,6 @@ export const updateNote = async (docID, data) => {
 export const trashNote = async (docID, data) => {
   const ref = db.collection(getCurrentUser());
   const doc = ref.doc(docID);
-
-  console.log("updating note..");
   const res = await doc.update({
     ...data,
     isTrashed: true,
@@ -72,12 +67,9 @@ export const trashNote = async (docID, data) => {
 export const deleteNote = (docID) => {
   const ref = db.collection(getCurrentUser());
   const doc = ref.doc(docID);
-  console.log("Deleting note with id:", doc);
   doc
     .delete()
-    .then(() => {
-      console.log("Document successfully deleted!");
-    })
+    .then(() => {})
     .catch((error) => {
       console.error("Error removing document: ", error);
     });

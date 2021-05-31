@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { IconButton, makeStyles, Tooltip } from "@material-ui/core";
 import { ImageOutlined } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";

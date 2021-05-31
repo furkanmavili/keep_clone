@@ -36,7 +36,6 @@ export default function Login() {
   const history = useHistory();
   const classes = useStyles();
   let location = useLocation();
-  console.log(location);
   let { from } = location.state || { from: { pathname: "/" } };
   useEffect(() => {
     if (user) {
