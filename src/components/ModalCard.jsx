@@ -88,7 +88,6 @@ export default function ModalCard({ open }) {
   const history = useHistory();
 
   useEffect(() => {
-    if (!id) return;
     const data = getSingleNote(id);
     data
       .get()
