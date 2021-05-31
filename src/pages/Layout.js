@@ -7,6 +7,8 @@ import routes from "../routes/index";
 import { useAuth } from "../firebase/auth";
 import Loading from "../components/Loading";
 import PageNotFound from "./PageNotFound";
+import NotesProvider from "../providers/NotesProvider";
+import SnackProvider from "../providers/SnackProvider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,20 +62,20 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={(props) =>
-        user ? (
-          <div className={classes.root}>
-            <Header />
-            <CustomDrawer />
-            <main className={classes.content}>
-              <div className={classes.toolbar} />
-              <Component {...props} />
-            </main>
-          </div>
-        ) : (
-          <div className={classes.root}></div>
-        )
-      }
+      render={(props) => (
+        <NotesProvider>
+          <SnackProvider>
+            <div className={classes.root}>
+              <Header />
+              <CustomDrawer />
+              <main className={classes.content}>
+                <div className={classes.toolbar} />
+                <Component {...props} />
+              </main>
+            </div>
+          </SnackProvider>
+        </NotesProvider>
+      )}
     />
   );
 };
