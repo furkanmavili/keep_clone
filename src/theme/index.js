@@ -41,8 +41,7 @@ let dark = createMuiTheme({
           borderWidth: "1px 1px 1px 6px",
           minHeight: 28,
           padding: "100px 0 0",
-          boxShadow:
-            "inset 1px 1px 0 rgb(0 0 0 / 10%), inset 0 -1px 0 rgb(0 0 0 / 7%)",
+          boxShadow: "inset 1px 1px 0 rgb(0 0 0 / 10%), inset 0 -1px 0 rgb(0 0 0 / 7%)",
         },
         "::-webkit-scrollbar-track": {
           backgroundClip: "padding-box",
@@ -75,13 +74,14 @@ let dark = createMuiTheme({
   palette: {
     type: "dark",
     background: {
-      dark: "#2d2e30",
+      dark: "#28292c",
       default: "#202124",
       paper: "#202124",
     },
     primary: {
-      main: "#2c7be5",
-      light: "#27bcfd",
+      main: "#8ab4f8",
+      light: "#7f90af",
+      dark: "#42516c",
       contrastText: "#000",
     },
     secondary: {
@@ -139,8 +139,7 @@ let light = createMuiTheme({
           borderWidth: "1px 1px 1px 6px",
           minHeight: 28,
           padding: "100px 0 0",
-          boxShadow:
-            "inset 1px 1px 0 rgb(0 0 0 / 10%), inset 0 -1px 0 rgb(0 0 0 / 7%)",
+          boxShadow: "inset 1px 1px 0 rgb(0 0 0 / 10%), inset 0 -1px 0 rgb(0 0 0 / 7%)",
         },
         "::-webkit-scrollbar-track": {
           backgroundClip: "padding-box",
