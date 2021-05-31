@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import AddAlertOutlinedIcon from "@material-ui/icons/AddAlertOutlined";
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
@@ -7,8 +7,10 @@ import UnarchiveOutlinedIcon from "@material-ui/icons/UnarchiveOutlined";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { makeStyles } from "@material-ui/core/styles";
 import colors from "../constants/colors";
-import { deleteNote, updateNote } from "../firebase/store";
+import { deleteNote, trashNote, updateNote } from "../firebase/store";
 import UploadPhoto from "./UploadPhoto";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import RestoreFromTrashIcon from "@material-ui/icons/RestoreFromTrash";
 import {
   ClickAwayListener,
   IconButton,
@@ -18,7 +20,7 @@ import {
   Popper,
   Tooltip,
 } from "@material-ui/core";
-import Toast from "./Toast";
+import { useSnack } from "../providers/SnackProvider";
 
 const useStyles = makeStyles((theme) => ({
   bottomMenu: {
@@ -113,10 +115,9 @@ function ButtonWithPopper({ label, placement, popper, icon, title }) {
   );
 }
 
+// item: note, closeButton:  showing close button, colorCallback: when color is selected on color palette
 export default function CardBottom({ item, closeButton, colorCallback }) {
   const classes = useStyles();
-  const [toastMessage, setToastMessage] = useState("");
-  const [openToast, setOpenToast] = useState(false);
   const handleArchive = () => {
     if (!item) return;
     updateNote(item["docID"], { isArchived: true });
@@ -124,16 +125,48 @@ export default function CardBottom({ item, closeButton, colorCallback }) {
   const handleUnarchive = () => {
     updateNote(item["docID"], { isArchived: false });
   };
+
+  const handleDeleteNote = () => {
+    deleteNote(item["docID"]);
+  };
+  const handleRestore = () => {
+    updateNote(item["docID"], { isTrashed: false });
+  };
+
+  // If note is trashed show restore & delete buttons
+  if (item["isTrashed"]) {
+    return (
+      <div className={classes.bottomMenu}>
+        <div className={classes.icons} style={{ justifyContent: "flex-start" }}>
+          <Tooltip title="Delete Forever">
+            <IconButton
+              className={classes.smallIcon}
+              aria-label="Delete forever"
+              onClick={handleDeleteNote}
+            >
+              <DeleteForeverIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Restore">
+            <IconButton className={classes.smallIcon} aria-label="Restore" onClick={handleRestore}>
+              <RestoreFromTrashIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
+      </div>
+    );
+  }
+
+  // If note is not trashed show normal card bottom icons
   return (
     <div className={classes.bottomMenu}>
       <div className={classes.icons}>
         {/* Reminder for card */}
-        <ButtonWithPopper
-          icon={<AddAlertOutlinedIcon />}
-          popper={<h2>hello</h2>}
-          label="color-popper"
-          title="Remind me"
-        />
+        <Tooltip title="Remind me">
+          <IconButton className={classes.smallIcon} aria-label="Add reminder" onClick={() => {}}>
+            <AddAlertOutlinedIcon />
+          </IconButton>
+        </Tooltip>
         <Tooltip title="Collaborator">
           <IconButton
             className={classes.smallIcon}
@@ -185,7 +218,6 @@ export default function CardBottom({ item, closeButton, colorCallback }) {
       </div>
 
       {closeButton}
-      <Toast message={toastMessage} open={openToast} setOpen={setOpenToast} />
     </div>
   );
 }
@@ -221,29 +253,37 @@ const MorePopperStyles = makeStyles((theme) => ({
 // Popper for more Options
 function MorePoppper({ item }) {
   const classes = MorePopperStyles();
+  const { createSnack } = useSnack();
+
   const handleDelete = () => {
-    deleteNote(item["docID"]);
+    trashNote(item["docID"]);
+    createSnack("Note trashed", {}, undoNote, true);
+  };
+
+  const undoNote = () => {
+    updateNote(item["docID"], item);
   };
 
   return (
-    <div className={classes.root}>
-      <List dense component="nav" aria-label="More options">
-        {item && (
-          <ListItem button onClick={handleDelete}>
-            <ListItemText primary="Delete Note" />
+    <>
+      <div className={classes.root}>
+        <List dense component="nav" aria-label="More options">
+          {item && (
+            <ListItem button onClick={handleDelete}>
+              <ListItemText primary="Delete Note" />
+            </ListItem>
+          )}
+          <ListItem button>
+            <ListItemText primary="Add label" />
           </ListItem>
-        )}
-
-        <ListItem button>
-          <ListItemText primary="Add label" />
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Add drawing" />
-        </ListItem>
-        <ListItem button>
-          <ListItemText primary="Make a copy" />
-        </ListItem>
-      </List>
-    </div>
+          <ListItem button>
+            <ListItemText primary="Add drawing" />
+          </ListItem>
+          <ListItem button>
+            <ListItemText primary="Make a copy" />
+          </ListItem>
+        </List>
+      </div>
+    </>
   );
 }
