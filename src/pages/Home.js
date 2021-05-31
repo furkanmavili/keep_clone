@@ -1,40 +1,26 @@
 import React, { useEffect, useState } from "react";
 import AddNote from "../components/AddNote";
 import CardList from "../components/CardList";
-import { getNotesRef } from "../firebase/store";
-import { useAuth } from "../firebase/auth";
 import { Typography } from "@material-ui/core";
 import { useParams } from "react-router";
 import ModalCard from "../components/ModalCard";
+import { useNotes } from "../providers/NotesProvider";
 
-function Home() {
-  const [notes, setNotes] = useState([]);
-  const { user } = useAuth();
+export default function Home() {
+  const { notes } = useNotes();
+  const filteredNotes = notes.filter((note) => !note["isArchived"] && !note["isTrashed"]);
   const { id } = useParams();
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
-    const ref = getNotesRef(user);
     if (id) {
       setShowModal(true);
     }
-    if (!ref) return;
-    const cancelSnapshot = ref.onSnapshot((querySnapshot) => {
-      const items = [];
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        data["docID"] = doc.id;
-        items.push(data);
-      });
-      const filtered = items.filter((i) => !i["isArchived"]);
-      setNotes(filtered);
-    });
-    return () => cancelSnapshot();
-  }, [id, user]);
+  }, [id]);
 
   return (
     <>
       <AddNote />
-      {notes.filter((i) => i["isPinned"]).length > 0 ? (
+      {filteredNotes.filter((i) => i["isPinned"]).length > 0 ? (
         <>
           <Typography color="textSecondary" variant="caption">
             PINNED
@@ -47,7 +33,7 @@ function Home() {
           <CardList notes={notes.filter((i) => !i["isPinned"])} />
         </>
       ) : (
-        <CardList notes={notes} />
+        <CardList notes={filteredNotes} />
       )}
       {id && <ModalCard open={showModal} />}
     </>
@@ -57,5 +43,3 @@ function Home() {
 function Spacer() {
   return <div style={{ marginTop: 60 }} />;
 }
-
-export default Home;
