@@ -25,12 +25,12 @@ export default function Home() {
           <Typography color="textSecondary" variant="caption">
             PINNED
           </Typography>
-          <CardList notes={notes.filter((i) => i["isPinned"])} />
+          <CardList notes={filteredNotes.filter((i) => i["isPinned"])} />
           <Spacer />
           <Typography color="textSecondary" variant="caption">
             OTHERS
           </Typography>
-          <CardList notes={notes.filter((i) => !i["isPinned"])} />
+          <CardList notes={filteredNotes.filter((i) => !i["isPinned"])} />
         </>
       ) : (
         <CardList notes={filteredNotes} />
