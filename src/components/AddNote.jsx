@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
   flex: {
     display: "flex",
+    flexWrap: "wrap",
     justifyContent: "center",
   },
 
@@ -50,10 +51,13 @@ const useStyles = makeStyles((theme) => ({
   note: {
     display: "flex",
     alignItems: "center",
+    flexWrap: "wrap",
   },
   input: {
     display: "block",
-    flex: 1,
+    [theme.breakpoints.up("sm")]: {
+      flex: 1,
+    },
   },
   icon: {
     margin: theme.spacing(0, 1),
