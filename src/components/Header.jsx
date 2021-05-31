@@ -1,4 +1,12 @@
-import { AppBar, IconButton, makeStyles, Toolbar, Tooltip, Typography } from "@material-ui/core";
+import {
+  AppBar,
+  IconButton,
+  Link,
+  makeStyles,
+  Toolbar,
+  Tooltip,
+  Typography,
+} from "@material-ui/core";
 import React, { useContext } from "react";
 import MenuIcon from "@material-ui/icons/Menu";
 import clsx from "clsx";
@@ -10,6 +18,7 @@ import CustomAvatar from "./CustomAvatar";
 import { DrawerContext } from "../providers/DrawerProvider";
 import { useAuth } from "../firebase/auth";
 import Logo from "../assets/logo.png";
+import { Link as RouterLink } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -41,6 +50,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     minWidth: "220px",
     color: theme.palette.text.primary,
+  },
+  logoText: {
+    color: "inherit",
   },
   input: {
     flex: 1,
@@ -85,9 +97,12 @@ function Header() {
           </IconButton>
           <img src={Logo} alt="logo" width={40} height={40} />
           <Typography variant="h6" noWrap>
-            Keeb
+            <Link component={RouterLink} to="/home" className={classes.logoText}>
+              Keeb Clone
+            </Link>
           </Typography>
         </div>
+
         <div className={classes.input}>
           <CustomInput />
         </div>
