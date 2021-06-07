@@ -1,6 +1,8 @@
 #### Google Keep's poor version. 
 Live here: https://keeb-clone.netlify.app/
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/423a89c9-aad4-4060-a66f-09a49497db7b/deploy-status)](https://app.netlify.com/sites/keeb-clone/deploys)
+
 <h3 align="center" style="margin-top: 20px">
  Tech Stack
 </h3>
